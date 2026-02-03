@@ -1,0 +1,25 @@
+const express=require("express");
+const router=express.Router();
+
+const authenticate=require("../middlewares/authMiddleware");
+const authorize=require("../middlewares/roleMiddleware");
+const charityController=require("../controllers/charityController");
+
+router.post(
+    "/",
+    authenticate,
+    authorize("USER"),
+    charityController.registerCharity
+);
+
+router.put(
+    "/",
+    authenticate,
+    authorize("CHARITY"),
+    charityController.updateCharity
+);
+
+router.get("/",charityController.listCharities);
+router.get("/:id",charityController.getCharity);
+
+module.exports=router;
