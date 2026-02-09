@@ -3,15 +3,23 @@ const Donation = require("../models/donation");
 const crypto = require("crypto");
 const User = require("../models/user");
 const Charity = require("../models/charity");
+const sequelize = require("../config/database");
 const { sendDonationConfirmation } = require("../services/emailService");
 const generateReceipt = require("../utils/generateDonationReceipt");
 
+// CREATE DONATION ORDER
 exports.createDonationOrder = async (req, res) => {
     try {
         const { amount, charityId } = req.body;
 
+        if (!amount || !charityId) {
+            return res.status(400).json({
+                message: "Amount and charityId are required",
+            });
+        }
+
         const order = await razorpay.orders.create({
-            amount: amount * 100, //covert to paise
+            amount: amount * 100, // convert to paise
             currency: "INR",
         });
 
@@ -19,7 +27,7 @@ exports.createDonationOrder = async (req, res) => {
             amount: order.amount,
             orderId: order.id,
             userId: req.user.userId,
-            charityId: charityId,
+            charityId:charityId,
             status: "PENDING",
         });
 
@@ -27,13 +35,16 @@ exports.createDonationOrder = async (req, res) => {
             success: true,
             order,
             donationId: donation.id,
-        })
+        });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to create donation order",
+        });
     }
 };
 
+// VERIFY PAYMENT
 exports.verifyPayment = async (req, res) => {
     try {
         const {
@@ -51,51 +62,115 @@ exports.verifyPayment = async (req, res) => {
             .digest("hex");
 
         if (expectedSignature !== razorpay_signature) {
-            return res.status(400).json({ message: "Payment verification failed" });
+            return res.status(400).json({
+                message: "Payment verification failed",
+            });
         }
 
-        await Donation.update(
-            {
-                paymentId: razorpay_payment_id,
-                status: "SUCCESS",
-            },
-            { where: { id: donationId } }
-        );
-
-        //Fetch donation with relations(for email data)
+        // Fetch donation with relations
         const donation = await Donation.findByPk(donationId, {
             include: [User, Charity],
         });
 
-        //Send confirmation email(non-blocking)
+        if (!donation) {
+            return res.status(404).json({
+                message: "Donation not found",
+            });
+        }
+
+        // Prevent double processing
+        if (donation.status === "SUCCESS") {
+            return res.status(400).json({
+                message: "Donation already processed",
+            });
+        }
+
+        // TRANSACTION: update donation + charity amount
+        await sequelize.transaction(async (t) => {
+            // Update donation
+            donation.paymentId = razorpay_payment_id;
+            donation.status = "SUCCESS";
+            await donation.save({ transaction: t });
+
+            // Increment charity collected amount
+            await Charity.increment(
+                { collectedAmount: donation.amount/100 },
+                {
+                    where: { id: donation.charityId },
+                    transaction: t,
+                }
+            );
+        });
+
+        // Send confirmation email (non-blocking)
         try {
             await sendDonationConfirmation({
                 to: donation.User.email,
                 name: donation.User.name,
                 amount: donation.amount / 100, // paise -> rupees
                 charityName: donation.Charity.name,
-            })
+            });
         } catch (emailError) {
             console.error("Email sending failed:", emailError.message);
         }
 
-        res.json({ success: true, message: "Donation successful" });
+        res.json({
+            success: true,
+            message: "Donation successful",
+        });
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
+        console.error(error);
+        res.status(500).json({
+            message: "Payment verification failed",
+        });
     }
 };
 
+// GET MY DONATIONS
 exports.getMyDonations = async (req, res) => {
-    const donations = await Donation.findAll({
-        where: { userId: req.user.userId },
-        include: ["Charity"],
-    });
+    try {
+        const donations = await Donation.findAll({
+            where: { userId: req.user.userId },
+            include: [
+                {
+                    model: Charity,
+                    attributes: ["id", "name", "category", "location"],
+                },
+            ],
+            order: [["createdAt", "DESC"]],
+        });
 
-    res.json(donations);
-}
+        if (!donations) {
+            return res.status(404).json({
+                message: "Donation not found or unauthorized",
+            });
+        }
 
+        const formattedDonations = donations.map(donation => ({
+            id: donation.id,
+            amount: donation.amount / 100, // paise → rupees
+            currency: donation.currency,
+            status: donation.status,
+            paymentId: donation.paymentId,
+            orderId: donation.orderId,
+            donatedAt: donation.createdAt,
+            charity: donation.Charity,
+        }));
+
+        res.json({
+            count: formattedDonations.length,
+            formattedDonations,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to fetch donations",
+        });
+    }
+};
+
+// DOWNLOAD RECEIPT
 exports.downloadReceipt = async (req, res) => {
     try {
         const donationId = req.params.id;
@@ -123,12 +198,9 @@ exports.downloadReceipt = async (req, res) => {
         );
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({
             message: "Failed to generate receipt",
         });
     }
 };
-
-
-

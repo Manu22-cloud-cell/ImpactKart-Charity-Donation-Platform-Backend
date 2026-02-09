@@ -80,7 +80,7 @@ exports.updateCharity= async (req,res)=>{
 //LIST APPROVED CHARITY
 
 exports.listCharities= async (req,res)=>{
-    const {category,location}=req.body;
+    const {category,location}=req.query;
 
     const where={status:"APPROVED"};
     if(category) where.category=category;

@@ -3,22 +3,25 @@ const PDFDocument = require("pdfkit");
 const generateDonationReceipt = (donation, user, charity, res) => {
     const doc = new PDFDocument({ margin: 50 });
 
-    //Set response headers
+    // Convert paise → rupees (safe integer conversion)
+    const amountInRupees = (donation.amount / 100).toFixed(2);
+
+    // Set response headers
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
         "Content-Disposition",
-        `attachment,filename=donation-receipt-${donation.id}.pdf`
+        `attachment; filename=donation-receipt-${donation.id}.pdf`
     );
 
     doc.pipe(res);
 
-    //Title
+    // Title
     doc
         .fontSize(20)
         .text("Donation Receipt", { align: "center" })
         .moveDown();
 
-    //Charity info
+    // Charity info
     doc
         .fontSize(14)
         .text(`Charity: ${charity.name}`)
@@ -26,7 +29,7 @@ const generateDonationReceipt = (donation, user, charity, res) => {
         .text(`Location: ${charity.location}`)
         .moveDown();
 
-    //Donor info
+    // Donor info
     doc
         .fontSize(14)
         .text(`Donor Name: ${user.name}`)
@@ -34,10 +37,10 @@ const generateDonationReceipt = (donation, user, charity, res) => {
         .text(`Phone: ${user.phone}`)
         .moveDown();
 
-    // Donation Info
+    // Donation info
     doc
         .fontSize(14)
-        .text(`Donation Amount: ₹${donation.amount}`)
+        .text(`Donation Amount: ₹${amountInRupees}`)
         .text(`Payment ID: ${donation.paymentId}`)
         .text(`Status: ${donation.status}`)
         .text(`Date: ${donation.createdAt.toDateString()}`)
@@ -52,7 +55,6 @@ const generateDonationReceipt = (donation, user, charity, res) => {
         );
 
     doc.end();
-
 };
 
 module.exports = generateDonationReceipt;

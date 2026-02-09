@@ -1,4 +1,6 @@
 const User=require("../models/user");
+const Donation=require("../models/donation");
+const Charity=require("../models/charity");
 
 // GET USER PROFILE
 
@@ -58,16 +60,31 @@ exports.updateProfile=async (req,res)=>{
 
 //USER DONATION HISTORY(placeholder)
 
-exports.getDonationHistory= async (req,res)=>{
+exports.getDonationHistory = async (req, res) => {
     try {
-        // Will be implemented after Donation model
-        res.json({
-            message: "Donation history",
-            donations: []
+        const donations = await Donation.findAll({
+            where: {
+                userId: req.user.userId,
+            },
+            include: [
+                {
+                    model: Charity,
+                    attributes: ["id", "name", "category", "location"],
+                },
+            ],
+            order: [["createdAt", "DESC"]],
         });
+
+        res.json({
+            message: "Donation history fetched successfully",
+            count: donations.length,
+            donations,
+        });
+
     } catch (error) {
+        console.error(error);
         res.status(500).json({
-            message: "Failed to fetch donation history"
-        })  
+            message: "Failed to fetch donation history",
+        });
     }
 };

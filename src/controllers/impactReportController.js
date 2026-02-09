@@ -5,12 +5,20 @@ exports.createImpactReport = async (req, res) => {
     try {
         const { title, description, images } = req.body;
 
+        if (!title || !description) {
+            return res.status(400).json({
+                message: "Title and description are required",
+            });
+        }
+
         const charity = await Charity.findOne({
             where: { createdBy: req.user.userId },
         });
 
         if (!charity) {
-            return res.status(403).json({ message: "Charity not found" });
+            return res.status(403).json({
+                message: "Only registered charities can create impact reports",
+            });
         }
 
         const report = await ImpactReport.create({
@@ -20,20 +28,31 @@ exports.createImpactReport = async (req, res) => {
             charityId: charity.id,
         });
 
-        res.status(201).json(report);
+        res.status(201).json({
+            message: "Impact report created successfully",
+            reportId: report.id,
+        });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to create impact report",
+        });
+    };
 };
 
-exports.getImpactReportsByCharity=async(req,res)=>{
-    const{charityId}=req.params;
+exports.getImpactReportsByCharity = async (req, res) => {
+    try {
+        const reports = await ImpactReport.findAll({
+            where: { charityId: req.params.charityId },
+        });
 
-    const reports=await ImpactReport.findAll({
-        where:{charityId},
-        order:[["createdAt","DESC"]],
-    });
+        res.json(reports);
 
-    res.json(reports);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to fetch impact reports",
+        });
+    }
 }
