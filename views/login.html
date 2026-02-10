@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>ImpactKart | Login</title>
+    <link rel="stylesheet" href="/css/auth.css" />
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <h2>Login</h2>
+
+        <form id="loginForm">
+            <input type="text" id="loginId" placeholder="Email or Phone" required />
+            <div class="password-field">
+                <input type="password" id="password" placeholder="Password" required />
+                <span class="toggle-password" data-target="password">
+                    Show
+                </span>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="switch">
+            New to ImpactKart?
+            <a href="/register.html">Register now</a>
+        </p>
+
+        <p id="message"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/passwordToggle.js"></script>
+    <script src="/js/login.js"></script>
+</body>
+
+</html>
