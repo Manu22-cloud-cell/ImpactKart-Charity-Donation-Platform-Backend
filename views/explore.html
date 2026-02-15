@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explore Campaigns</title>
+    <link rel="stylesheet" href="/css/explore.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <h2>ImpactKart</h2>
+</nav>
+
+<section class="explore-filters">
+    <input type="text" id="searchInput" placeholder="Search by Campaign/NGO">
+    
+    <select id="locationFilter">
+        <option value="">All Locations</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Mumbai">Mumbai</option>
+    </select>
+
+    <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="Strays">Strays</option>
+        <option value="Gaushala">Gaushala</option>
+        <option value="Elderly">Elderly</option>
+        <option value="Children">Children</option>
+    </select>
+</section>
+
+<div class="categories-scroll">
+    <button class="cat-btn" data-cat="">ALL</button>
+    <button class="cat-btn" data-cat="Strays">Strays</button>
+    <button class="cat-btn" data-cat="Gaushala">Gaushala</button>
+    <button class="cat-btn" data-cat="Elderly">Elderly</button>
+</div>
+
+<section id="campaignList" class="campaign-list"></section>
+
+<button id="loadMoreBtn">Load More</button>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/explore.js"></script>
+</body>
+</html>
