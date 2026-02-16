@@ -13,18 +13,34 @@ exports.getAllCharities = async (req, res) => {
     }
 }
 
-//GET PENDING CHARITIES
+
+// GET PENDING CHARITIES (Server-side Pagination)
 exports.getPendingCharities = async (req, res) => {
     try {
-        const charities = await Charity.findAll({
+        // Get page & limit from query params
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await Charity.findAndCountAll({
             where: { status: "PENDING" },
             include: {
                 model: User,
                 attributes: ["id", "name", "email", "phone"]
-            }
+            },
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]] // newest first
         });
 
-        res.json(charities);
+        res.json({
+            data: rows,
+            totalItems: count,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page
+        });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
