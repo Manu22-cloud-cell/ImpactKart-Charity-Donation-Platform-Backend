@@ -1,10 +1,10 @@
-const {Charity,User}=require("../models");
+const { Charity, User } = require("../models");
 
 //REGISTER CHARITY
 
-exports.registerCharity=async (req,res)=>{
+exports.registerCharity = async (req, res) => {
     try {
-        const {name,description,category,location,goalAmount}=req.body;
+        const { name, description, category, location, goalAmount } = req.body;
 
         if (!name || !description || !category || !location || !goalAmount) {
             return res.status(400).json({
@@ -12,8 +12,8 @@ exports.registerCharity=async (req,res)=>{
             });
         }
 
-        const existingCharity= await Charity.findOne({
-            where:{createdBy:req.user.userId}
+        const existingCharity = await Charity.findOne({
+            where: { createdBy: req.user.userId }
         });
 
         if (existingCharity) {
@@ -22,7 +22,7 @@ exports.registerCharity=async (req,res)=>{
             });
         }
 
-        const charity=await Charity.create({
+        const charity = await Charity.create({
             name,
             description,
             category,
@@ -33,8 +33,8 @@ exports.registerCharity=async (req,res)=>{
 
         // Upgrade user role to CHARITY
         await User.update(
-            {role:"CHARITY"},
-            {where:{id:req.user.userId}}
+            { role: "CHARITY" },
+            { where: { id: req.user.userId } }
         );
 
         res.status(201).json({
@@ -46,21 +46,27 @@ exports.registerCharity=async (req,res)=>{
         console.error(error);
         res.status(500).json({
             message: "Charity registration failed"
-        }); 
+        });
     }
 };
 
 //UPDATE CHARITY PROFILE
 
-exports.updateCharity= async (req,res)=>{
+exports.updateCharity = async (req, res) => {
     try {
-        const charity=await Charity.findOne({
-            where:{createdBy:req.user.userId}
+        const charity = await Charity.findOne({
+            where: { createdBy: req.user.userId }
         });
 
         if (!charity) {
             return res.status(404).json({
                 message: "Charity not found"
+            });
+        }
+
+        if (charity.status === "APPROVED") {
+            return res.status(400).json({
+                message: "Approved campaigns cannot be edited"
             });
         }
 
@@ -73,22 +79,77 @@ exports.updateCharity= async (req,res)=>{
     } catch (error) {
         res.status(500).json({
             message: "Update failed"
-        });  
+        });
+    }
+};
+
+// GET MY CHARITY
+exports.getMyCharity = async (req, res) => {
+    try {
+        const charity = await Charity.findOne({
+            where: { createdBy: req.user.userId },
+            include: {
+                model: User,
+                attributes: ["name", "email"]
+            }
+        });
+
+        if (!charity) {
+            return res.status(404).json({
+                message: "No charity found for this user"
+            });
+        }
+
+        res.json(charity);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Failed to fetch charity"
+        });
+    }
+};
+
+// DELETE MY CHARITY (ONLY IF PENDING)
+exports.deleteMyCharity = async (req, res) => {
+    try {
+
+        const charity = await Charity.findOne({
+            where: { createdBy: req.user.userId }
+        });
+
+        if (!charity) {
+            return res.status(404).json({ message: "Charity not found" });
+        }
+
+        if (charity.status !== "PENDING") {
+            return res.status(400).json({
+                message: "Only pending campaigns can be deleted"
+            });
+        }
+
+        await charity.destroy();
+
+        res.json({ message: "Campaign deleted successfully" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to delete campaign" });
     }
 };
 
 //LIST APPROVED CHARITY
 
-exports.listCharities= async (req,res)=>{
-    const {category,location}=req.query;
+exports.listCharities = async (req, res) => {
+    const { category, location } = req.query;
 
-    const where={status:"APPROVED"};
-    if(category) where.category=category;
-    if(location) where.location=location;
+    const where = { status: "APPROVED" };
+    if (category) where.category = category;
+    if (location) where.location = location;
 
-    const charities=await Charity.findAll({
+    const charities = await Charity.findAll({
         where,
-        attributes:{exclude:["createdBy"]}
+        attributes: { exclude: ["createdBy"] }
     });
 
     res.json(charities);
@@ -96,8 +157,8 @@ exports.listCharities= async (req,res)=>{
 
 //GET SINGLE CHARITY
 
-exports.getCharity=async (req,res)=>{
-    const charity=await Charity.findByPk(req.params.id);
+exports.getCharity = async (req, res) => {
+    const charity = await Charity.findByPk(req.params.id);
 
     if (!charity || charity.status !== "APPROVED") {
         return res.status(404).json({

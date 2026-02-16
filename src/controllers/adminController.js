@@ -84,28 +84,29 @@ exports.approveCharity = async (req, res) => {
 
 exports.rejectCharity = async (req, res) => {
     try {
-        const charity = await Charity.findByPk(req.params.id);
+        const charity = await Charity.findByPk(req.params.id, {
+            include: User
+        });
 
         if (!charity) {
-            return res.status(404).json({
-                message: "Charity not found"
-            });
+            return res.status(404).json({ message: "Charity not found" });
         }
 
         charity.status = "REJECTED";
         await charity.save();
 
-        res.json({
-            message: "Charity rejected"
-        });
+        // revert role
+        charity.User.role = "USER";
+        await charity.User.save();
+
+        res.json({ message: "Charity rejected and role reverted" });
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: "Rejection failed"
-        });
+        console.error(error);
+        res.status(500).json({ message: "Reject failed" });
     }
 };
+
 
 //VIEW ALL USERS
 

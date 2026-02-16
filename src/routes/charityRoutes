@@ -19,6 +19,21 @@ router.put(
     charityController.updateCharity
 );
 
+router.get(
+    "/me",
+    authenticate,
+    authorize("CHARITY"),
+    charityController.getMyCharity
+);
+
+router.delete(
+    "/me",
+    authenticate,
+    authorize("CHARITY"),
+    charityController.deleteMyCharity
+);
+
+
 router.get("/",charityController.listCharities);
 router.get("/:id",charityController.getCharity);
 

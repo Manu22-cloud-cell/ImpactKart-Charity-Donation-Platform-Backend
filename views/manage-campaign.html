@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Manage Campaign | ImpactKart</title>
+    <link rel="stylesheet" href="/css/manage-campaign.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <h2>ImpactKart</h2>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <section class="campaign-container">
+
+        <h2>My Campaign</h2>
+
+        <div id="statusBadge" class="status-badge"></div>
+
+        <form id="campaignForm">
+            <label>Name</label>
+            <input type="text" id="name" required>
+
+            <label>Description</label>
+            <textarea id="description" required></textarea>
+
+            <label>Category</label>
+            <input type="text" id="category" required>
+
+            <label>Location</label>
+            <input type="text" id="location" required>
+
+            <label>Goal Amount</label>
+            <input type="number" id="goalAmount" required>
+
+            <button id="updateBtn" type="submit">Update Campaign</button>
+        </form>
+
+        <button id="deleteBtn" style="background:red;margin-top:15px;">
+            Delete Campaign
+        </button>
+
+
+        <div class="stats">
+            <h3>Campaign Stats</h3>
+            <p><strong>Goal:</strong> ₹<span id="goalDisplay"></span></p>
+            <p><strong>Collected:</strong> ₹<span id="collectedDisplay"></span></p>
+        </div>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/manage-campaign.js"></script>
+</body>
+
+</html>

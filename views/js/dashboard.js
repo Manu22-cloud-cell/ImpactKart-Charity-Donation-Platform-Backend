@@ -19,7 +19,9 @@ async function initDashboard() {
 
         if (user.role === "CHARITY") {
             startCampaignLink.textContent = "Manage Campaign";
+            startCampaignLink.href = "/manage-campaign.html";
         }
+
 
     } catch (error) {
         console.error("Profile fetch failed:", error);
