@@ -139,10 +139,23 @@ async function loadPendingCharities(page = 1) {
     }
 }
 
-
 function renderPendingTable(charities) {
     const table = document.getElementById("pendingTable");
     table.innerHTML = "";
+
+    // Empty State
+    if (!charities || charities.length === 0) {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td colspan="4" class="empty-state">
+                📭 No pending charities found
+            </td>
+        `;
+
+        table.appendChild(row);
+        return;
+    }
 
     charities.forEach(charity => {
         const row = document.createElement("tr");
@@ -177,14 +190,18 @@ function updatePaginationInfo() {
     const prevBtn = document.getElementById("prevPage");
     const nextBtn = document.getElementById("nextPage");
 
+    if (totalPages === 0) {
+        document.getElementById("pageInfo").textContent = "No pages available";
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+    }
+
     document.getElementById("pageInfo").textContent =
         `Page ${currentPage} of ${totalPages}`;
 
-    // Disable/Enable Previous
     prevBtn.disabled = currentPage === 1;
-
-    // Disable/Enable Next
-    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    nextBtn.disabled = currentPage === totalPages;
 }
 
 // ================= ACTIONS =================

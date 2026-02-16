@@ -206,5 +206,13 @@ button {
     cursor: not-allowed;
 }
 
+.empty-state {
+    text-align: center;
+    padding: 30px;
+    font-size: 16px;
+    color: #777;
+}
+
+
 
 
