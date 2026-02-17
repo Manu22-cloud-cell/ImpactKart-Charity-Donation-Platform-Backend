@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ImpactKart | My Profile</title>
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <h2 class="logo">ImpactKart</h2>
+    <a href="/dashboard.html">Back to Dashboard</a>
+</nav>
+
+<section class="container">
+    <h2>My Profile</h2>
+
+    <div class="profile-header">
+        <img 
+            id="profilePreview" 
+            class="profile-img" 
+            src="/images/default-avatar.png" 
+            alt="Profile Picture"
+        />
+        <span id="roleBadge" class="role-badge"></span>
+    </div>
+
+    <p class="created-date">
+        Member since: <span id="createdAt"></span>
+    </p>
+
+    <!-- IMPORTANT: No multipart/form-data anymore -->
+    <form id="profileForm">
+
+        <label>Change Profile Picture</label>
+        <input 
+            type="file" 
+            id="profileImage" 
+            accept="image/png, image/jpeg"
+        />
+
+        <label>Name</label>
+        <input type="text" id="name" required />
+
+        <label>Email</label>
+        <input type="email" id="email" disabled />
+
+        <label>Phone</label>
+        <input type="text" id="phone" />
+
+        <label>New Password (optional)</label>
+        <input type="password" id="password" />
+
+        <button type="submit">Update Profile</button>
+
+        <p id="message"></p>
+    </form>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/profile.js"></script>
+
+</body>
+</html>
