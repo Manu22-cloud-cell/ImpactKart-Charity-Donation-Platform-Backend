@@ -1,4 +1,5 @@
 const { Charity, User } = require("../models");
+const { Op } = require("sequelize");
 
 //REGISTER CHARITY
 
@@ -139,20 +140,37 @@ exports.deleteMyCharity = async (req, res) => {
 };
 
 //LIST APPROVED CHARITY
-
 exports.listCharities = async (req, res) => {
-    const { category, location } = req.query;
+    try {
+        const { category, location, search, page = 1, limit = 6 } = req.query;
 
-    const where = { status: "APPROVED" };
-    if (category) where.category = category;
-    if (location) where.location = location;
+        const where = { status: "APPROVED" };
 
-    const charities = await Charity.findAll({
-        where,
-        attributes: { exclude: ["createdBy"] }
-    });
+        if (category) where.category = category;
+        if (location) where.location = location;
 
-    res.json(charities);
+        if (search) {
+            where.name = {
+                [Op.like]: `%${search}%`
+            };
+        }
+
+        const offset = (page - 1) * limit;
+
+        const charities = await Charity.findAll({
+            where,
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+            order: [["createdAt", "DESC"]],
+            attributes: { exclude: ["createdBy"] }
+        });
+
+        res.json(charities);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to fetch charities" });
+    }
 };
 
 //GET SINGLE CHARITY

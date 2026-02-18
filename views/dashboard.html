@@ -1,56 +1,75 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>ImpactKart | Dashboard</title>
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-    <div class="nav-left">
-        <h2 class="logo">ImpactKart</h2>
-    </div>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <h2 class="logo">ImpactKart</h2>
+        </div>
 
-    <div class="nav-center">
-        <a href="/explore.html">Explore Campaigns</a>
-        <a href="/start-campaign.html" id="startCampaignLink">Start A Campaign</a>
-    </div>
+        <div class="nav-center">
+            <a href="/explore.html">Explore Campaigns</a>
+            <a href="/start-campaign.html" id="startCampaignLink">Start A Campaign</a>
+        </div>
 
-    <div class="nav-right">
-        <div class="dropdown">
-            <span id="navUserName">User</span>
-            <div class="dropdown-content">
-                <a href="/profile.html" id="profileLink">My Profile</a>
-                <a href="#">My Transactions</a>
-                <a href="#" id="adminPanelLink" style="display:none;">Admin Panel</a>
-                <a href="#" id="logoutBtn">Logout</a>
+        <div class="nav-right">
+            <div class="dropdown">
+                <span id="navUserName">User</span>
+                <div class="dropdown-content">
+                    <a href="/profile.html" id="profileLink">My Profile</a>
+                    <a href="#">My Transactions</a>
+                    <a href="#" id="adminPanelLink" style="display:none;">Admin Panel</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- FILTER SECTION -->
-<section class="filters">
-    <input type="text" id="searchInput" placeholder="Search by Campaign or NGO Name">
+    <!-- FILTER SECTION -->
+    <section class="filters">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search campaigns or NGOs...">
+            <button id="clearSearchBtn">✕</button>
+        </div>
 
-    <div class="categories-scroll">
-        <button class="category-btn">Strays</button>
-        <button class="category-btn">Gaushala</button>
-        <button class="category-btn">Elderly</button>
-        <button class="category-btn">Children</button>
-        <button class="category-btn">Specially-Abled</button>
-        <button class="category-btn">Hunger & Food</button>
-        <button class="category-btn">Education</button>
-        <button class="category-btn">Healthcare</button>
-        <button class="category-btn">Environment</button>
-        <button class="category-btn">Women Empowerment</button>
-        <button class="category-btn">Disaster Relief</button>
-    </div>
-</section>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/dashboard.js"></script>
+        <div class="categories-scroll">
+    <button class="category-btn active-category">All</button>
+    <button class="category-btn">Strays</button>
+    <button class="category-btn">Gaushala</button>
+    <button class="category-btn">Elderly</button>
+    <button class="category-btn">Children</button>
+    <button class="category-btn">Specially-Abled</button>
+    <button class="category-btn">Hunger & Food</button>
+    <button class="category-btn">Education</button>
+    <button class="category-btn">Healthcare</button>
+    <button class="category-btn">Environment</button>
+    <button class="category-btn">Women Empowerment</button>
+    <button class="category-btn">Disaster Relief</button>
+</div>
+
+    </section>
+
+    <!-- CAMPAIGNS SECTION -->
+    <section class="campaigns">
+        <h2>Recently Added Campaigns</h2>
+        <div id="campaignContainer" class="campaign-grid"></div>
+        <div id="loadingIndicator" style="text-align:center; padding:20px; display:none;">
+    Loading campaigns...
+</div>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/dashboard.js"></script>
 </body>
+
 </html>

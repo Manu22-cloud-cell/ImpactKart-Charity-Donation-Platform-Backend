@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Charity Details</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+<div id="charityDetails"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/api.js"></script>
+<script>
+    async function loadCharity() {
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        try {
+            const response = await api.get(`/charities/${id}`);
+            const charity = response.data;
+
+            document.getElementById("charityDetails").innerHTML = `
+                <h1>${charity.name}</h1>
+                <p>${charity.description}</p>
+                <p>Category: ${charity.category}</p>
+                <p>Location: ${charity.location}</p>
+                <p>Goal: ₹${charity.goalAmount}</p>
+                <p>Raised: ₹${charity.collectedAmount}</p>
+            `;
+
+        } catch (error) {
+            alert("Charity not found");
+        }
+    }
+
+    loadCharity();
+</script>
+</body>
+</html>

@@ -12,6 +12,16 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.navbar a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    color: #00b09b;
+}
+
 .logo {
     color: #00b09b;
 }
