@@ -41,19 +41,19 @@
 
 
         <div class="categories-scroll">
-    <button class="category-btn active-category">All</button>
-    <button class="category-btn">Strays</button>
-    <button class="category-btn">Gaushala</button>
-    <button class="category-btn">Elderly</button>
-    <button class="category-btn">Children</button>
-    <button class="category-btn">Specially-Abled</button>
-    <button class="category-btn">Hunger & Food</button>
-    <button class="category-btn">Education</button>
-    <button class="category-btn">Healthcare</button>
-    <button class="category-btn">Environment</button>
-    <button class="category-btn">Women Empowerment</button>
-    <button class="category-btn">Disaster Relief</button>
-</div>
+            <button class="category-btn active-category">All</button>
+            <button class="category-btn">Strays</button>
+            <button class="category-btn">Gaushala</button>
+            <button class="category-btn">Elderly</button>
+            <button class="category-btn">Children</button>
+            <button class="category-btn">Specially-Abled</button>
+            <button class="category-btn">Hunger & Food</button>
+            <button class="category-btn">Education</button>
+            <button class="category-btn">Healthcare</button>
+            <button class="category-btn">Environment</button>
+            <button class="category-btn">Women Empowerment</button>
+            <button class="category-btn">Disaster Relief</button>
+        </div>
 
     </section>
 
@@ -62,13 +62,35 @@
         <h2>Recently Added Campaigns</h2>
         <div id="campaignContainer" class="campaign-grid"></div>
         <div id="loadingIndicator" style="text-align:center; padding:20px; display:none;">
-    Loading campaigns...
-</div>
+            Loading campaigns...
+        </div>
 
     </section>
 
+    <div id="donationModal" class="donation-modal hidden">
+        <div class="donation-modal-content">
+            <span class="close-modal" onclick="closeDonationModal()">&times;</span>
+
+            <h2 id="donationCharityName"></h2>
+
+            <div class="preset-amounts">
+                <button onclick="selectAmount(500)">₹500</button>
+                <button onclick="selectAmount(1000)">₹1000</button>
+                <button onclick="selectAmount(2000)">₹2000</button>
+            </div>
+
+            <input type="number" id="customAmount" placeholder="Enter custom amount (₹)" min="1" />
+
+            <button class="confirm-donate-btn" onclick="startDonation()">
+                Proceed to Pay
+            </button>
+        </div>
+    </div>
+
+    
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/api.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>
 

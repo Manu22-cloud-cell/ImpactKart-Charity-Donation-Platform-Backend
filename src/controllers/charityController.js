@@ -142,22 +142,22 @@ exports.deleteMyCharity = async (req, res) => {
 //LIST APPROVED CHARITY
 exports.listCharities = async (req, res) => {
     try {
-        const { category, location, search, page = 1, limit = 6 } = req.query;
+        const { category, search, page = 1, limit = 6 } = req.query;
 
         const where = { status: "APPROVED" };
 
         if (category) where.category = category;
-        if (location) where.location = location;
 
         if (search) {
-            where.name = {
-                [Op.like]: `%${search}%`
-            };
+            where[Op.or] = [
+                { name: { [Op.like]: `%${search}%` } },
+                { location: { [Op.like]: `%${search}%` } }
+            ];
         }
 
         const offset = (page - 1) * limit;
 
-        const charities = await Charity.findAll({
+        const { count, rows } = await Charity.findAndCountAll({
             where,
             limit: parseInt(limit),
             offset: parseInt(offset),
@@ -165,13 +165,19 @@ exports.listCharities = async (req, res) => {
             attributes: { exclude: ["createdBy"] }
         });
 
-        res.json(charities);
+        res.json({
+            total: count,
+            page: parseInt(page),
+            totalPages: Math.ceil(count / limit),
+            charities: rows
+        });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to fetch charities" });
     }
 };
+
 
 //GET SINGLE CHARITY
 

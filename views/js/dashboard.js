@@ -7,7 +7,10 @@ let currentCategory = "";
 let isLoading = false;
 let hasMoreData = true;
 
-// DOM references (initialized after DOM loads)
+// Razorpay Public Key (FRONTEND SAFE)
+const RAZORPAY_KEY = "rzp_test_SBCOdQy5WWyIor";
+
+// DOM references
 let container;
 let loadingIndicator;
 let emptyState;
@@ -16,7 +19,6 @@ let emptyState;
 // ================= INIT =================
 async function initDashboard() {
 
-    // Initialize DOM elements AFTER page loads
     container = document.getElementById("campaignContainer");
     loadingIndicator = document.getElementById("loadingIndicator");
     emptyState = document.getElementById("emptyState");
@@ -30,9 +32,7 @@ async function initDashboard() {
         const response = await api.get("/users/profile");
         const user = response.data.user;
 
-        if (navUserName) {
-            navUserName.textContent = user.name;
-        }
+        if (navUserName) navUserName.textContent = user.name;
 
         if (user.role === "ADMIN" && adminPanelLink) {
             adminPanelLink.style.display = "block";
@@ -78,27 +78,23 @@ async function loadCampaigns(reset = false) {
     isLoading = true;
     if (loadingIndicator) loadingIndicator.style.display = "block";
 
-    const params = {
-        page: currentPage,
-        limit: limit
-    };
-
+    const params = { page: currentPage, limit };
     if (currentSearch) params.search = currentSearch;
     if (currentCategory) params.category = currentCategory;
 
     try {
         const response = await api.get("/charities", { params });
-        const campaigns = response.data;
+        const { charities, totalPages } = response.data;
 
-        if (campaigns.length === 0 && currentPage === 1) {
+        if (charities.length === 0 && currentPage === 1) {
             if (emptyState) emptyState.style.display = "block";
         }
 
-        if (campaigns.length < limit) {
+        if (currentPage >= totalPages) {
             hasMoreData = false;
         }
 
-        renderCampaigns(campaigns);
+        renderCampaigns(charities);
         currentPage++;
 
     } catch (error) {
@@ -117,8 +113,8 @@ function renderCampaigns(campaigns) {
 
     campaigns.forEach(campaign => {
 
-        const collected = Number(campaign.collectedAmount);
-        const goal = Number(campaign.goalAmount);
+        const collected = Number(campaign.collectedAmount) || 0;
+        const goal = Number(campaign.goalAmount) || 0;
 
         const progressPercent = goal > 0
             ? Math.min((collected / goal) * 100, 100)
@@ -129,17 +125,29 @@ function renderCampaigns(campaigns) {
 
         card.innerHTML = `
             <h3>${campaign.name}</h3>
-            <p>${campaign.location}</p>
+            <p>${campaign.location || ""}</p>
             <p>${campaign.description.substring(0, 80)}...</p>
+
             <div class="progress-bar">
                 <div class="progress" style="width:${progressPercent}%"></div>
             </div>
+
             <p>₹${collected} raised of ₹${goal}</p>
+
             <button class="donate-btn">Donate</button>
         `;
 
+        // Navigate only when clicking card (NOT donate button)
         card.addEventListener("click", () => {
             window.location.href = `/charity-details.html?id=${campaign.id}`;
+        });
+
+        // Attach donate button separately
+        const donateBtn = card.querySelector(".donate-btn");
+
+        donateBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent card click redirect
+            openDonationModal(campaign.id, campaign.name);
         });
 
         container.appendChild(card);
@@ -186,35 +194,23 @@ if (clearSearchBtn) {
 
 
 // ================= CATEGORY FILTER =================
-// ================= CATEGORY FILTER =================
 const categoryButtons = document.querySelectorAll(".category-btn");
 
 categoryButtons.forEach(btn => {
     btn.addEventListener("click", () => {
 
-        // Remove active class from all
         categoryButtons.forEach(b => b.classList.remove("active-category"));
-
-        // Add active class to clicked
         btn.classList.add("active-category");
 
         const selectedCategory = btn.textContent.trim();
 
-        // If "All" clicked → reset filters
         if (selectedCategory === "All") {
             currentCategory = "";
             currentSearch = "";
-
-            if (searchInput) searchInput.value = "";
-            if (searchWrapper) searchWrapper.classList.remove("active");
-
-            loadCampaigns(true);
-            return;
+        } else {
+            currentCategory = selectedCategory;
+            currentSearch = "";
         }
-
-        // Otherwise filter by category
-        currentCategory = selectedCategory;
-        currentSearch = "";
 
         if (searchInput) searchInput.value = "";
         if (searchWrapper) searchWrapper.classList.remove("active");
@@ -224,8 +220,119 @@ categoryButtons.forEach(btn => {
 });
 
 
+// ================= DONATION FLOW =================
+let selectedCharityId = null;
+let selectedCharityName = null;
+let selectedAmount = 0;
 
-// ================= INFINITE SCROLL =================
+function openDonationModal(charityId, charityName) {
+    selectedCharityId = charityId;
+    selectedCharityName = charityName;
+
+    document.getElementById("donationCharityName").innerText =
+        `Donate to ${charityName}`;
+
+    document.getElementById("donationModal").classList.remove("hidden");
+}
+
+function closeDonationModal() {
+    document.getElementById("donationModal").classList.add("hidden");
+}
+
+function selectAmount(amount) {
+    selectedAmount = amount;
+    document.getElementById("customAmount").value = amount;
+
+    document.querySelectorAll(".quick-amounts button")
+        .forEach(btn => btn.classList.remove("active"));
+
+    event.target.classList.add("active");
+}
+
+async function startDonation() {
+
+    const token = localStorage.getItem("token");
+    const customAmount = document.getElementById("customAmount").value;
+    const amount = parseInt(customAmount || selectedAmount);
+
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/donations/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                amount,
+                charityId: selectedCharityId,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert("Failed to initiate donation");
+            return;
+        }
+
+        const options = {
+            key: RAZORPAY_KEY,
+            amount: data.order.amount,
+            currency: "INR",
+            name: "ImpactKart",
+            description: `Donation to ${selectedCharityName}`,
+            order_id: data.order.id,
+            handler: async function (response) {
+                await verifyPayment(response, data.donationId);
+            },
+            theme: { color: "#6c63ff" },
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (error) {
+        console.error(error);
+        alert("Donation failed to start");
+    }
+}
+
+async function verifyPayment(response, donationId) {
+
+    const token = localStorage.getItem("token");
+
+    const verifyRes = await fetch("/api/donations/verify", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            donationId,
+        }),
+    });
+
+    const result = await verifyRes.json();
+
+    if (result.success) {
+        alert("🎉 Donation Successful!");
+        closeDonationModal();
+        loadCampaigns(true); // refresh without full reload
+    } else {
+        alert("Payment verification failed");
+    }
+}
+
+
+// ================= INFINITE SCROLL (Debounced) =================
 let scrollTimeout;
 
 window.addEventListener("scroll", () => {
@@ -242,9 +349,16 @@ window.addEventListener("scroll", () => {
             loadCampaigns();
         }
 
-    }, 100);
+    }, 120);
+});
+
+window.addEventListener("click", function (e) {
+    const modal = document.getElementById("donationModal");
+    if (e.target === modal) {
+        closeDonationModal();
+    }
 });
 
 
 // ================= START =================
-initDashboard();
+document.addEventListener("DOMContentLoaded", initDashboard);

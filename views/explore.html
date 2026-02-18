@@ -1,46 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Explore Campaigns</title>
+    <title>ImpactKart | Explore Campaigns</title>
     <link rel="stylesheet" href="/css/explore.css">
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
-    <h2>ImpactKart</h2>
+    <div class="nav-left">
+        <h2 class="logo">ImpactKart</h2>
+    </div>
+
+    <div class="nav-right">
+        <a href="/dashboard.html" class="back-btn">← Back to Dashboard</a>
+    </div>
 </nav>
 
-<section class="explore-filters">
-    <input type="text" id="searchInput" placeholder="Search by Campaign/NGO">
-    
-    <select id="locationFilter">
-        <option value="">All Locations</option>
-        <option value="Chennai">Chennai</option>
-        <option value="Mumbai">Mumbai</option>
-    </select>
-
-    <select id="categoryFilter">
-        <option value="">All Categories</option>
-        <option value="Strays">Strays</option>
-        <option value="Gaushala">Gaushala</option>
-        <option value="Elderly">Elderly</option>
-        <option value="Children">Children</option>
-    </select>
+<!-- HERO -->
+<section class="explore-hero">
+    <p class="tagline-line1">Choose the cause you love</p>
+    <h1 class="tagline-line2"><strong>Explore causes</strong></h1>
 </section>
 
-<div class="categories-scroll">
-    <button class="cat-btn" data-cat="">ALL</button>
-    <button class="cat-btn" data-cat="Strays">Strays</button>
-    <button class="cat-btn" data-cat="Gaushala">Gaushala</button>
-    <button class="cat-btn" data-cat="Elderly">Elderly</button>
+<!-- SEARCH + FILTERS -->
+<section class="filters">
+
+    <div class="search-wrapper">
+        <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Search campaigns, NGOs, or location..."
+        >
+    </div>
+
+    <!-- CATEGORY PILLS -->
+    <div class="categories-scroll">
+        <button class="cat-btn active" data-cat="">ALL</button>
+        <button class="cat-btn" data-cat="Strays">Strays</button>
+        <button class="cat-btn" data-cat="Gaushala">Gaushala</button>
+        <button class="cat-btn" data-cat="Elderly">Elderly</button>
+        <button class="cat-btn" data-cat="Children">Children</button>
+        <button class="cat-btn" data-cat="Specially-Abled">Specially-Abled</button>
+        <button class="cat-btn" data-cat="Hunger & Food">Hunger & Food</button>
+        <button class="cat-btn" data-cat="Education">Education</button>
+        <button class="cat-btn" data-cat="Women Empowerment">Women Empowerment</button>
+        <button class="cat-btn" data-cat="Disaster Relief">Disaster Relief</button>
+        <button class="cat-btn" data-cat="Healthcare">Healthcare</button>
+        <button class="cat-btn" data-cat="Environment">Environment</button>
+    </div>
+
+    <!-- ACTIVE FILTER CHIPS -->
+    <div id="activeFilters" class="active-filters"></div>
+
+</section>
+
+<!-- CAMPAIGNS -->
+<section class="campaigns">
+    <div id="campaignList" class="campaign-grid"></div>
+
+    <div id="loadingIndicator" class="loading" style="display:none;">
+        Loading campaigns...
+    </div>
+
+    <div id="noResults" class="no-results" style="display:none;">
+        No campaigns found.
+    </div>
+</section>
+
+
+<!-- ================= DONATION MODAL ================= -->
+<div id="donationModal" class="modal hidden">
+    <div class="modal-content">
+
+        <h2 id="donationCharityName">Donate</h2>
+
+        <!-- Quick Amount Buttons -->
+        <div class="quick-amounts">
+            <button type="button" onclick="selectAmount(100)">₹100</button>
+            <button type="button" onclick="selectAmount(500)">₹500</button>
+            <button type="button" onclick="selectAmount(1000)">₹1000</button>
+            <button type="button" onclick="selectAmount(2000)">₹2000</button>
+        </div>
+
+        <!-- Custom Amount -->
+        <input 
+            type="number" 
+            id="customAmount" 
+            placeholder="Enter custom amount"
+            min="1"
+        />
+
+        <!-- Actions -->
+        <div class="modal-actions">
+            <button id="payBtn" type="button">Proceed to Pay</button>
+            <button type="button" onclick="closeDonationModal()">Cancel</button>
+        </div>
+
+    </div>
 </div>
 
-<section id="campaignList" class="campaign-list"></section>
 
-<button id="loadMoreBtn">Load More</button>
-
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/api.js"></script>
-<script src="/js/explore.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/js/explore.js" defer></script>
+
 </body>
 </html>
