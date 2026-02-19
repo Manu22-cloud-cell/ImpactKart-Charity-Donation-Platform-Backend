@@ -76,10 +76,11 @@
             <div class="preset-amounts">
                 <button onclick="selectAmount(500)">₹500</button>
                 <button onclick="selectAmount(1000)">₹1000</button>
+                <button onclick="selectAmount(1500)">₹1500</button>
                 <button onclick="selectAmount(2000)">₹2000</button>
             </div>
 
-            <input type="number" id="customAmount" placeholder="Enter custom amount (₹)" min="1" />
+            <input type="number" id="customAmount" placeholder="Enter amount (₹)" min="1" />
 
             <button class="confirm-donate-btn" onclick="startDonation()">
                 Proceed to Pay
@@ -87,10 +88,10 @@
         </div>
     </div>
 
-    
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/api.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/donationComponent.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>
 

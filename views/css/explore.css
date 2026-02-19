@@ -154,15 +154,15 @@ body {
    DONATION MODAL STYLES
 ========================= */
 
-.modal {
+.donation-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 999;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3px);
     animation: fadeIn 0.2s ease-in-out;
 }
 
@@ -170,105 +170,101 @@ body {
     display: none;
 }
 
-.modal-content {
+.donation-modal-content {
     background: #ffffff;
     width: 95%;
     max-width: 420px;
-    border-radius: 16px;
     padding: 28px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    border-radius: 14px;
     text-align: center;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+    position: relative;
     animation: slideUp 0.25s ease-in-out;
 }
 
-.modal-content h2 {
+.donation-modal-content h2 {
     margin-bottom: 20px;
-    font-size: 20px;
     color: #333;
 }
 
-/* Quick Amount Buttons */
-.quick-amounts {
+/* Close Icon */
+.close-modal {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #888;
+    transition: 0.2s ease;
+}
+
+.close-modal:hover {
+    color: #00b09b;
+}
+
+/* Preset Amount Buttons */
+.preset-amounts {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-bottom: 18px;
 }
 
-.quick-amounts button {
+.preset-amounts button {
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid #e0e0e0;
-    background: #f7f7f7;
+    background: #f0faf8;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s ease;
 }
 
-.quick-amounts button:hover {
-    background: #6c63ff;
+.preset-amounts button:hover {
+    background: #00b09b;
     color: white;
-    border-color: #6c63ff;
+    border-color: #00b09b;
 }
 
-/* Custom Amount */
+.preset-amounts button.active {
+    background: #00b09b;
+    color: white;
+    border-color: #00b09b;
+}
+
+/* Custom Amount Input */
 #customAmount {
     width: 100%;
     padding: 10px 12px;
-    margin-bottom: 20px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid #ddd;
-    font-size: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
     outline: none;
-    transition: 0.2s;
-}
-
-#customAmount:focus {
-    border-color: #6c63ff;
-    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
-}
-
-/* Modal Buttons */
-.modal-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.modal-actions button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
     transition: 0.2s ease;
 }
 
-#payBtn {
-    background: #6c63ff;
+#customAmount:focus {
+    border-color: #00b09b;
+    box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.15);
+}
+
+/* Confirm Button */
+.confirm-donate-btn {
+    width: 100%;
+    padding: 12px;
+    background: #00b09b;
     color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
-#payBtn:hover {
-    background: #574fd6;
+.confirm-donate-btn:hover {
+    background: #009688;
 }
-
-.modal-actions button:last-child {
-    background: #eee;
-    color: #333;
-}
-
-.modal-actions button:last-child:hover {
-    background: #ddd;
-}
-
-.quick-amounts button.active {
-    background: #6c63ff;
-    color: white;
-    border-color: #6c63ff;
-}
-
 
 /* =========================
    ANIMATIONS

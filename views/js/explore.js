@@ -8,9 +8,6 @@ let currentCategory = "";
 let isLoading = false;
 let totalPages = 1;
 
-// Razorpay public key
-const RAZORPAY_KEY = "rzp_test_SBCOdQy5WWyIor";
-
 const campaignList = document.getElementById("campaignList");
 const loadingIndicator = document.getElementById("loadingIndicator");
 const noResults = document.getElementById("noResults");
@@ -82,7 +79,12 @@ function renderCampaigns(charities) {
 
             <p>₹${collected} raised of ₹${goal}</p>
 
-            <button class="donate-btn">Donate</button>
+            <button 
+             class="donate-btn"
+             data-id="${charity.id}"
+             data-name="${charity.name}">
+             Start Your Impact
+            </button>
         `;
 
         // Navigate when clicking card
@@ -90,132 +92,9 @@ function renderCampaigns(charities) {
             window.location.href = `/charity-details.html?id=${charity.id}`;
         });
 
-        // Donate button
-        const donateBtn = card.querySelector(".donate-btn");
-
-        donateBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // prevent card navigation
-            openDonationModal(charity.id, charity.name);
-        });
-
         campaignList.appendChild(card);
     });
 }
-
-
-// ================= DONATION FLOW =================
-let selectedCharityId = null;
-let selectedCharityName = null;
-let selectedAmount = 0;
-
-function openDonationModal(charityId, charityName) {
-    selectedCharityId = charityId;
-    selectedCharityName = charityName;
-
-    document.getElementById("donationCharityName").innerText =
-        `Donate to ${charityName}`;
-
-    document.getElementById("donationModal").classList.remove("hidden");
-}
-
-function closeDonationModal() {
-    document.getElementById("donationModal").classList.add("hidden");
-}
-
-function selectAmount(amount) {
-    selectedAmount = amount;
-    document.getElementById("customAmount").value = amount;
-
-    document.querySelectorAll(".quick-amounts button")
-        .forEach(btn => btn.classList.remove("active"));
-
-    event.target.classList.add("active");
-}
-
-async function startDonation() {
-
-    const token = localStorage.getItem("token");
-    const customAmount = document.getElementById("customAmount").value;
-    const amount = parseInt(customAmount || selectedAmount);
-
-    if (!amount || amount <= 0) {
-        alert("Please enter a valid amount");
-        return;
-    }
-
-    try {
-        const response = await fetch("/api/donations/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                amount,
-                charityId: selectedCharityId,
-            }),
-        });
-
-        const data = await response.json();
-
-        if (!data.success) {
-            alert("Failed to initiate donation");
-            return;
-        }
-
-        const options = {
-            key: RAZORPAY_KEY,
-            amount: data.order.amount,
-            currency: "INR",
-            name: "ImpactKart",
-            description: `Donation to ${selectedCharityName}`,
-            order_id: data.order.id,
-            handler: async function (response) {
-                await verifyPayment(response, data.donationId);
-            },
-            theme: { color: "#6c63ff" },
-        };
-
-        const rzp = new Razorpay(options);
-        rzp.open();
-
-    } catch (error) {
-        console.error(error);
-        alert("Donation failed to start");
-    }
-}
-
-async function verifyPayment(response, donationId) {
-
-    const token = localStorage.getItem("token");
-
-    const verifyRes = await fetch("/api/donations/verify", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            donationId,
-        }),
-    });
-
-    const result = await verifyRes.json();
-
-    if (result.success) {
-        closeDonationModal();
-        setTimeout(() => {
-            window.location.href = `/transactions.html?success=true&donationId=${donationId}`;
-        }, 1500)
-    }
-    else {
-        alert("Payment verification failed");
-    }
-}
-
 
 // ================= SEARCH =================
 let searchDebounce;
@@ -321,8 +200,6 @@ window.addEventListener("click", function (e) {
         closeDonationModal();
     }
 });
-
-
 
 // ================= INIT =================
 document.addEventListener("DOMContentLoaded", () => {
