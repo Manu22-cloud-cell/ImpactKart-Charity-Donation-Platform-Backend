@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ImpactKart | My Transactions</title>
+    <link rel="stylesheet" href="/css/transactions.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <h2 class="logo">ImpactKart</h2>
+    </div>
+
+    <div class="nav-right">
+        <a href="/dashboard.html" class="back-btn">← Back to Dashboard</a>
+    </div>
+</nav>
+
+<!-- SUCCESS MESSAGE -->
+<div id="successBanner" class="success-banner hidden">
+    🎉 Donation Successful! Your receipt is available below.
+</div>
+
+<!-- TRANSACTIONS -->
+<section class="transactions">
+    <h2>My Donations</h2>
+
+    <div id="transactionsList" class="transactions-list"></div>
+
+    <div id="noTransactions" class="no-transactions hidden">
+        You haven’t made any donations yet.
+    </div>
+</section>
+
+<script src="/js/transactions.js" defer></script>
+</body>
+</html>

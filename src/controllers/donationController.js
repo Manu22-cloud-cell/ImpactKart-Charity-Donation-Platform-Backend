@@ -27,7 +27,7 @@ exports.createDonationOrder = async (req, res) => {
             amount: order.amount,
             orderId: order.id,
             userId: req.user.userId,
-            charityId:charityId,
+            charityId: charityId,
             status: "PENDING",
         });
 
@@ -94,7 +94,7 @@ exports.verifyPayment = async (req, res) => {
 
             // Increment charity collected amount
             await Charity.increment(
-                { collectedAmount: donation.amount/100 },
+                { collectedAmount: donation.amount / 100 },
                 {
                     where: { id: donation.charityId },
                     transaction: t,
@@ -107,11 +107,15 @@ exports.verifyPayment = async (req, res) => {
             await sendDonationConfirmation({
                 to: donation.User.email,
                 name: donation.User.name,
-                amount: donation.amount / 100, // paise -> rupees
+                amount: donation.amount / 100,
                 charityName: donation.Charity.name,
+                donation,
+                user: donation.User,
+                charity: donation.Charity,
             });
+
         } catch (emailError) {
-            console.error("Email sending failed:", emailError.message);
+            console.error("Email sending failed:", emailError);
         }
 
         res.json({
@@ -190,12 +194,23 @@ exports.downloadReceipt = async (req, res) => {
             });
         }
 
-        generateReceipt(
+        // Generate PDF buffer
+        const pdfBuffer = await generateReceipt(
             donation,
             donation.User,
-            donation.Charity,
-            res
+            donation.Charity
         );
+
+        // Set correct headers
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename=donation-receipt-${donation.id}.pdf`
+        );
+        res.setHeader("Content-Length", pdfBuffer.length);
+
+        // Send PDF
+        res.send(pdfBuffer);
 
     } catch (error) {
         console.error(error);

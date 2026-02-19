@@ -306,31 +306,43 @@ async function verifyPayment(response, donationId) {
 
     const token = localStorage.getItem("token");
 
-    const verifyRes = await fetch("/api/donations/verify", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            donationId,
-        }),
-    });
+    try {
 
-    const result = await verifyRes.json();
+        const verifyRes = await fetch("/api/donations/verify", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                donationId,
+            }),
+        });
 
-    if (result.success) {
-        alert("🎉 Donation Successful!");
+        const result = await verifyRes.json();
+
+        if (!verifyRes.ok || !result.success) {
+            alert("Payment verification failed");
+            return;
+        }
+
+        // Close modal
         closeDonationModal();
-        loadCampaigns(true); // refresh without full reload
-    } else {
-        alert("Payment verification failed");
+
+        // Redirect to transactions page with success flag
+        setTimeout(() => {
+            window.location.href = `/transactions.html?success=true&donationId=${donationId}`;
+        }, 1500)
+
+
+    } catch (error) {
+        console.error("Verification failed:", error);
+        alert("Something went wrong during verification.");
     }
 }
-
 
 // ================= INFINITE SCROLL (Debounced) =================
 let scrollTimeout;

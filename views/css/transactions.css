@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo {
+    color: #00b09b;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+/* SUCCESS BANNER */
+.success-banner {
+    background: #00b09b;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.hidden {
+    display: none;
+}
+
+/* TRANSACTIONS */
+.transactions {
+    margin: 40px;
+}
+
+.transactions h2 {
+    margin-bottom: 20px;
+}
+
+.transactions-list {
+    display: grid;
+    gap: 20px;
+}
+
+/* CARD */
+.transaction-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.transaction-card h3 {
+    margin: 0 0 10px;
+}
+
+.transaction-meta {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.status-success {
+    color: #00b09b;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: orange;
+    font-weight: 600;
+}
+
+.download-btn {
+    padding: 8px 14px;
+    border: none;
+    background: #00b09b;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.download-btn:hover {
+    background: #009688;
+}
+
+.no-transactions {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #666;
+}

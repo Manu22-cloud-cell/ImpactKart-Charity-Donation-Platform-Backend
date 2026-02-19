@@ -1,60 +1,57 @@
 const PDFDocument = require("pdfkit");
 
-const generateDonationReceipt = (donation, user, charity, res) => {
-    const doc = new PDFDocument({ margin: 50 });
+const generateDonationReceiptBuffer = (donation, user, charity) => {
+    return new Promise((resolve, reject) => {
+        const doc = new PDFDocument({ margin: 50 });
 
-    // Convert paise → rupees (safe integer conversion)
-    const amountInRupees = (donation.amount / 100).toFixed(2);
+        doc.info.Title = "Donation Receipt";
+        doc.info.Author = "ImpactKart";
+        doc.info.Subject = "Official Donation Receipt";
+        doc.info.Creator = "ImpactKart Donation System";
 
-    // Set response headers
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=donation-receipt-${donation.id}.pdf`
-    );
+        const buffers = [];
 
-    doc.pipe(res);
+        doc.on("data", buffers.push.bind(buffers));
+        doc.on("end", () => {
+            const pdfData = Buffer.concat(buffers);
+            resolve(pdfData);
+        });
 
-    // Title
-    doc
-        .fontSize(20)
-        .text("Donation Receipt", { align: "center" })
-        .moveDown();
+        const amountInRupees = (donation.amount / 100).toFixed(2);
 
-    // Charity info
-    doc
-        .fontSize(14)
-        .text(`Charity: ${charity.name}`)
-        .text(`Category: ${charity.category}`)
-        .text(`Location: ${charity.location}`)
-        .moveDown();
+        doc
+            .fontSize(20)
+            .text("Donation Receipt", { align: "center" })
+            .moveDown();
 
-    // Donor info
-    doc
-        .fontSize(14)
-        .text(`Donor Name: ${user.name}`)
-        .text(`Email: ${user.email}`)
-        .text(`Phone: ${user.phone}`)
-        .moveDown();
+        doc
+            .fontSize(14)
+            .text(`Charity: ${charity.name}`)
+            .text(`Category: ${charity.category}`)
+            .text(`Location: ${charity.location}`)
+            .moveDown();
 
-    // Donation info
-    doc
-        .fontSize(14)
-        .text(`Donation Amount: ₹${amountInRupees}`)
-        .text(`Payment ID: ${donation.paymentId}`)
-        .text(`Status: ${donation.status}`)
-        .text(`Date: ${donation.createdAt.toDateString()}`)
-        .moveDown();
+        doc
+            .text(`Donor Name: ${user.name}`)
+            .text(`Email: ${user.email}`)
+            .text(`Phone: ${user.phone || "N/A"}`)
+            .moveDown();
 
-    // Footer
-    doc
-        .fontSize(10)
-        .text(
-            "Thank you for your generous contribution! This receipt can be used for your records.",
-            { align: "center" }
-        );
+        doc
+            .text(`Donation Amount: ₹${amountInRupees}`)
+            .text(`Payment ID: ${donation.paymentId}`)
+            .text(`Order ID: ${donation.orderId}`)
+            .text(`Date: ${donation.createdAt.toDateString()}`)
+            .moveDown();
 
-    doc.end();
+        doc
+            .fontSize(10)
+            .text("Thank you for your generous contribution!", {
+                align: "center",
+            });
+
+        doc.end();
+    });
 };
 
-module.exports = generateDonationReceipt;
+module.exports = generateDonationReceiptBuffer;

@@ -206,10 +206,12 @@ async function verifyPayment(response, donationId) {
     const result = await verifyRes.json();
 
     if (result.success) {
-        alert("🎉 Donation Successful!");
         closeDonationModal();
-        loadCampaigns(true); // refresh explore page data
-    } else {
+        setTimeout(() => {
+            window.location.href = `/transactions.html?success=true&donationId=${donationId}`;
+        }, 1500)
+    }
+    else {
         alert("Payment verification failed");
     }
 }
