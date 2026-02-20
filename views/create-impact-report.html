@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Impact Report | ImpactKart</title>
+    <link rel="stylesheet" href="/css/create-impact-report.css">
+</head>
+
+<body>
+
+    <div id="navbarContainer"></div>
+
+    <div class="impact-container">
+        <div class="impact-card">
+            <h2>Create Impact Report</h2>
+            <p class="subtitle">Share how donations are creating real change.</p>
+
+            <form id="impactForm" enctype="multipart/form-data">
+
+                <label>Report Title</label>
+                <input type="text" name="title" placeholder="Eg: School Supplies Distributed" required />
+
+                <label>Description</label>
+                <textarea name="description" placeholder="Describe the impact in detail..." required></textarea>
+
+                <label>Upload Images</label>
+                <input type="file" name="images" multiple />
+
+                <button type="submit" class="publish-btn">
+                    Publish Impact Report
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/navbar.js"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            await loadNavbar();   // Load navbar first
+        });
+
+        document.getElementById("impactForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            try {
+                await api.post("/impact-reports", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+
+                alert("Impact report created successfully!");
+                window.location.href = "/dashboard.html";
+
+            } catch (error) {
+                alert("Failed to create report");
+            }
+        });
+    </script>
+</body>
+
+</html>

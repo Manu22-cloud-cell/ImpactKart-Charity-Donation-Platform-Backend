@@ -1,0 +1,159 @@
+/* Page Background */
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #f0f4ff, #ffffff);
+}
+
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-center a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.logo {
+    color: #00b09b;
+}
+
+/* DROPDOWN */
+.dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    min-width: 150px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Container */
+.impact-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    margin: 60px auto;
+    /* centers horizontally + spacing from navbar */
+}
+
+/* Card */
+.impact-card {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Heading */
+.impact-card h2 {
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 18px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Inputs */
+input[type="text"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+/* Focus effect */
+input:focus,
+textarea:focus {
+    border-color: #4a6cf7;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.15);
+}
+
+/* Textarea */
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Publish Button */
+.publish-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    background: #4a6cf7;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.publish-btn:hover {
+    background: #3a55d4;
+    transform: translateY(-1px);
+}
+
+/* Smooth Fade Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .impact-card {
+        padding: 25px;
+    }
+}

@@ -13,6 +13,11 @@ let loadingIndicator;
 let emptyState;
 
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadNavbar();   // Load navbar first
+    initDashboard();      // Then load dashboard
+});
+
 // ================= INIT =================
 async function initDashboard() {
 
@@ -20,44 +25,8 @@ async function initDashboard() {
     loadingIndicator = document.getElementById("loadingIndicator");
     emptyState = document.getElementById("emptyState");
 
-    const navUserName = document.getElementById("navUserName");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const adminPanelLink = document.getElementById("adminPanelLink");
-    const startCampaignLink = document.getElementById("startCampaignLink");
-
-    try {
-        const response = await api.get("/users/profile");
-        const user = response.data.user;
-
-        if (navUserName) navUserName.textContent = user.name;
-
-        if (user.role === "ADMIN" && adminPanelLink) {
-            adminPanelLink.style.display = "block";
-            adminPanelLink.href = "/admin.html";
-        }
-
-        if (user.role === "CHARITY" && startCampaignLink) {
-            startCampaignLink.textContent = "Manage Campaign";
-            startCampaignLink.href = "/manage-campaign.html";
-        }
-
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "/login.html";
-        }
-    }
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("token");
-            window.location.href = "/login.html";
-        });
-    }
-
     loadCampaigns(true);
 }
-
 
 // ================= LOAD CAMPAIGNS =================
 async function loadCampaigns(reset = false) {

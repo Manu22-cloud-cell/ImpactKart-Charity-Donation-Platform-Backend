@@ -5,6 +5,53 @@ body {
     background-color: #f4f6f9;
 }
 
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-center a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.logo {
+    color: #00b09b;
+}
+
+/* DROPDOWN */
+.dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    min-width: 150px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 /* Container */
 .container {
     max-width: 900px;
@@ -208,3 +255,35 @@ body {
 .confirm-donate-btn:hover {
     background: #009688;
 }
+
+#impactReportsSection {
+    margin-top: 40px;
+}
+
+.impact-card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.impact-images {
+    margin-top: 10px;
+}
+
+.impact-images img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.impact-date {
+    display: block;
+    margin-top: 10px;
+    color: #777;
+}
+

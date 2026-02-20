@@ -8,10 +8,7 @@
 
 <body>
 
-    <nav class="navbar">
-        <h2>ImpactKart</h2>
-        <button id="logoutBtn">Logout</button>
-    </nav>
+    <div id="navbarContainer"></div>
 
     <section class="campaign-container">
 
@@ -42,6 +39,9 @@
             Delete Campaign
         </button>
 
+        <button id="createImpactBtn" style="margin-top:15px; background:#28a745; color:white;">
+            Create Impact Report
+        </button>
 
         <div class="stats">
             <h3>Campaign Stats</h3>
@@ -53,6 +53,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/api.js"></script>
+    <script src="/js/navbar.js"></script>
     <script src="/js/manage-campaign.js"></script>
 </body>
 

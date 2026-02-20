@@ -1,11 +1,15 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
+    await loadNavbar();
+
     const logoutBtn = document.getElementById("logoutBtn");
     const form = document.getElementById("campaignForm");
     const deleteBtn = document.getElementById("deleteBtn");
-    const updateBtn=document.getElementById("updateBtn");
+    const updateBtn = document.getElementById("updateBtn");
+    const createImpactBtn = document.getElementById("createImpactBtn");
 
-    let charity; 
+
+    let charity;
 
     try {
         const response = await api.get("/charities/me");
@@ -37,16 +41,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (charity.status === "APPROVED") {
             disableForm();
             deleteBtn.style.display = "none";
-            updateBtn.style.display="none";
+            updateBtn.style.display = "none";
+            createImpactBtn.style.display = "inline-block";
         }
+
 
         if (charity.status === "REJECTED") {
             disableForm();
             deleteBtn.style.display = "none";
+            createImpactBtn.style.display = "none";
         }
 
         if (charity.status === "PENDING") {
             deleteBtn.style.display = "inline-block";
+            createImpactBtn.style.display = "none";
         }
 
     } catch (error) {
@@ -113,6 +121,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) {
             alert(error.response?.data?.message || "Delete failed");
         }
+    });
+
+    // -----------------------------
+    // CREATE IMPACT REPORT
+    // -----------------------------
+    createImpactBtn.addEventListener("click", () => {
+        window.location.href = "/create-impact-report.html";
     });
 
     // -----------------------------

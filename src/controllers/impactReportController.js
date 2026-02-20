@@ -1,9 +1,10 @@
 const ImpactReport = require("../models/impactReport");
 const Charity = require("../models/charity");
+const uploadToS3 = require("../utils/uploadToS3");
 
 exports.createImpactReport = async (req, res) => {
     try {
-        const { title, description, images } = req.body;
+        const { title, description } = req.body;
 
         if (!title || !description) {
             return res.status(400).json({
@@ -21,16 +22,25 @@ exports.createImpactReport = async (req, res) => {
             });
         }
 
+        let imageUrls = [];
+
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const url = await uploadToS3(file);
+                imageUrls.push(url);
+            }
+        }
+
         const report = await ImpactReport.create({
             title,
             description,
-            images,
+            images: imageUrls,
             charityId: charity.id,
         });
 
         res.status(201).json({
             message: "Impact report created successfully",
-            reportId: report.id,
+            report,
         });
 
     } catch (error) {
@@ -38,21 +48,17 @@ exports.createImpactReport = async (req, res) => {
         res.status(500).json({
             message: "Failed to create impact report",
         });
-    };
+    }
 };
-
 exports.getImpactReportsByCharity = async (req, res) => {
     try {
         const reports = await ImpactReport.findAll({
             where: { charityId: req.params.charityId },
         });
-
         res.json(reports);
-
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: "Failed to fetch impact reports",
-        });
+        res.status(500).json({ message: "Failed to fetch impact reports", });
     }
 }

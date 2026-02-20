@@ -13,6 +13,11 @@ const loadingIndicator = document.getElementById("loadingIndicator");
 const noResults = document.getElementById("noResults");
 const activeFilters = document.getElementById("activeFilters");
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadNavbar();   // Load navbar first
+});
+
+
 
 // ================= LOAD =================
 async function loadCampaigns(reset = false) {

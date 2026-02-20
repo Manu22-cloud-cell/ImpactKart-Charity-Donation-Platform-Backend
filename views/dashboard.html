@@ -7,30 +7,8 @@
 </head>
 
 <body>
-
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <h2 class="logo">ImpactKart</h2>
-        </div>
-
-        <div class="nav-center">
-            <a href="/explore.html">Explore Campaigns</a>
-            <a href="/start-campaign.html" id="startCampaignLink">Start A Campaign</a>
-        </div>
-
-        <div class="nav-right">
-            <div class="dropdown">
-                <span id="navUserName">User</span>
-                <div class="dropdown-content">
-                    <a href="/profile.html" id="profileLink">My Profile</a>
-                    <a href="/transactions.html" id="transactionsLink">My Transactions</a>
-                    <a href="#" id="adminPanelLink" style="display:none;">Admin Panel</a>
-                    <a href="#" id="logoutBtn">Logout</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    
+    <div id="navbarContainer"></div>
 
     <!-- FILTER SECTION -->
     <section class="filters">
@@ -90,9 +68,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/api.js"></script>
+    <script src="/js/navbar.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/js/donationComponent.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>
-
 </html>

@@ -6,29 +6,51 @@ body {
     background: #f5f7fa;
     margin: 0;
 }
-
+/* NAVBAR */
 .navbar {
-    padding: 15px 40px;
-    background: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    padding: 15px 40px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-center a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
 }
 
 .logo {
     color: #00b09b;
-    margin: 0;
 }
 
-.navbar a {
+/* DROPDOWN */
+.dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    min-width: 150px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
     text-decoration: none;
-    color: #555;
-    font-weight: 500;
+    color: black;
 }
 
-.navbar a:hover {
-    color: #00b09b;
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 /* =========================

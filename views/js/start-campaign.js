@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
+    await loadNavbar(); 
+
     const form = document.getElementById("registerForm");
     const message = document.getElementById("message");
 
