@@ -1,23 +1,30 @@
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <h2 class="logo">ImpactKart</h2>
-        </div>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/dashboard.html" class="logo">
+            <svg class="logo-svg" viewBox="0 0 24 24" fill="none">
+                <path
+                    d="M12 21s-6-4.35-9-8.28C1.5 10.5 3 7.5 6 7.5c1.74 0 3 1.02 3.5 2.09C10 8.52 11.26 7.5 13 7.5c3 0 4.5 3 3 5.22C18 16.65 12 21 12 21z"
+                    fill="currentColor" />
+            </svg>
+            <span class="logo-text">ImpactKart</span>
+        </a>
+    </div>
 
-        <div class="nav-center">
-            <a href="/explore.html" class="nav-link">Explore Campaigns</a>
-            <a href="/start-campaign.html" id="startCampaignLink" class="nav-link">Start A Campaign</a>
-        </div>
+    <div class="nav-center">
+        <a href="/explore.html" class="nav-link">Explore Campaigns</a>
+        <a href="/start-campaign.html" id="startCampaignLink" class="nav-link">Start A Campaign</a>
+    </div>
 
-        <div class="nav-right">
-            <div class="dropdown">
-                <span id="navUserName">User</span>
-                <div class="dropdown-content">
-                    <a href="/profile.html" id="profileLink">My Profile</a>
-                    <a href="/transactions.html" id="transactionsLink">My Transactions</a>
-                    <a href="#" id="adminPanelLink" style="display:none;">Admin Panel</a>
-                    <a href="#" id="logoutBtn">Logout</a>
-                </div>
+    <div class="nav-right">
+        <div class="dropdown">
+            <span id="navUserName">User</span>
+            <div class="dropdown-content">
+                <a href="/profile.html" id="profileLink">My Profile</a>
+                <a href="/transactions.html" id="transactionsLink">My Transactions</a>
+                <a href="#" id="adminPanelLink" style="display:none;">Admin Panel</a>
+                <a href="#" id="logoutBtn">Logout</a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>

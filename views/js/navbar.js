@@ -79,6 +79,7 @@ async function initNavbar() {
 
     setupLogout();
     highlightActiveLink();
+    setupDropdown();
 }
 
 
@@ -96,6 +97,23 @@ function setupLogout() {
     }
 }
 
+function setupDropdown() {
+    const dropdown = document.querySelector(".dropdown");
+    const dropdownContent = document.querySelector(".dropdown-content");
+
+    if (!dropdown) return;
+
+    // Toggle on click
+    dropdown.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+    });
+
+    // Close when clicking outside
+    document.addEventListener("click", () => {
+        dropdown.classList.remove("show");
+    });
+}
 
 /* ================= ACTIVE PAGE HIGHLIGHT ================= */
 
