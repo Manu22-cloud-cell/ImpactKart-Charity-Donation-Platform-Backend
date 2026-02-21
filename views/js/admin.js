@@ -7,6 +7,8 @@ let totalPages = 1;
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    await loadNavbar();
+
     const logoutBtn = document.getElementById("logoutBtn");
     const sidebarItems = document.querySelectorAll(".sidebar li[data-section]");
     const prevBtn = document.getElementById("prevPage");

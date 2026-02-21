@@ -1,69 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>ImpactKart | Explore Campaigns</title>
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/explore.css">
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<div id="navbarContainer"></div>
+    <!-- NAVBAR -->
+    <div id="navbarContainer"></div>
 
-<!-- HERO -->
-<section class="explore-hero">
-    <p class="tagline-line1">Choose the cause you love</p>
-    <h1 class="tagline-line2"><strong>Explore causes</strong></h1>
-</section>
+    <!-- HERO -->
+    <section class="explore-hero">
+        <p class="tagline-line1">Choose the cause you love</p>
+        <h1 class="tagline-line2"><strong>Explore causes</strong></h1>
+    </section>
 
-<!-- SEARCH + FILTERS -->
-<section class="filters">
+    <!-- SEARCH + FILTERS -->
+    <section class="filters">
 
-    <div class="search-wrapper">
-        <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="Search campaigns, NGOs, or location..."
-        >
-    </div>
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Search campaigns, NGOs, or location...">
+        </div>
 
-    <!-- CATEGORY PILLS -->
-    <div class="categories-scroll">
-        <button class="cat-btn active" data-cat="">ALL</button>
-        <button class="cat-btn" data-cat="Strays">Strays</button>
-        <button class="cat-btn" data-cat="Gaushala">Gaushala</button>
-        <button class="cat-btn" data-cat="Elderly">Elderly</button>
-        <button class="cat-btn" data-cat="Children">Children</button>
-        <button class="cat-btn" data-cat="Specially-Abled">Specially-Abled</button>
-        <button class="cat-btn" data-cat="Hunger & Food">Hunger & Food</button>
-        <button class="cat-btn" data-cat="Education">Education</button>
-        <button class="cat-btn" data-cat="Women Empowerment">Women Empowerment</button>
-        <button class="cat-btn" data-cat="Disaster Relief">Disaster Relief</button>
-        <button class="cat-btn" data-cat="Healthcare">Healthcare</button>
-        <button class="cat-btn" data-cat="Environment">Environment</button>
-    </div>
+        <!-- CATEGORY PILLS -->
+        <div class="categories-scroll">
+            <button class="cat-btn active" data-cat="">ALL</button>
+            <button class="cat-btn" data-cat="Strays">Strays</button>
+            <button class="cat-btn" data-cat="Gaushala">Gaushala</button>
+            <button class="cat-btn" data-cat="Elderly">Elderly</button>
+            <button class="cat-btn" data-cat="Children">Children</button>
+            <button class="cat-btn" data-cat="Specially-Abled">Specially-Abled</button>
+            <button class="cat-btn" data-cat="Hunger & Food">Hunger & Food</button>
+            <button class="cat-btn" data-cat="Education">Education</button>
+            <button class="cat-btn" data-cat="Women Empowerment">Women Empowerment</button>
+            <button class="cat-btn" data-cat="Disaster Relief">Disaster Relief</button>
+            <button class="cat-btn" data-cat="Healthcare">Healthcare</button>
+            <button class="cat-btn" data-cat="Environment">Environment</button>
+        </div>
 
-    <!-- ACTIVE FILTER CHIPS -->
-    <div id="activeFilters" class="active-filters"></div>
+        <!-- ACTIVE FILTER CHIPS -->
+        <div id="activeFilters" class="active-filters"></div>
 
-</section>
+    </section>
 
-<!-- CAMPAIGNS -->
-<section class="campaigns">
-    <div id="campaignList" class="campaign-grid"></div>
+    <!-- CAMPAIGNS -->
+    <section class="campaigns">
+        <div id="campaignList" class="campaign-grid"></div>
 
-    <div id="loadingIndicator" class="loading" style="display:none;">
-        Loading campaigns...
-    </div>
+        <div id="loadingIndicator" class="loading" style="display:none;">
+            Loading campaigns...
+        </div>
 
-    <div id="noResults" class="no-results" style="display:none;">
-        No campaigns found.
-    </div>
-</section>
+        <div id="noResults" class="no-results" style="display:none;">
+            No campaigns found.
+        </div>
+    </section>
 
 
-<!-- ================= DONATION MODAL ================= -->
-<div id="donationModal" class="donation-modal hidden">
+    <!-- ================= DONATION MODAL ================= -->
+    <div id="donationModal" class="donation-modal hidden">
         <div class="donation-modal-content">
             <span class="close-modal" onclick="closeDonationModal()">&times;</span>
 
@@ -84,13 +82,14 @@
         </div>
     </div>
 
-<!-- SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/navbar.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="/js/donationComponent.js"></script>
-<script src="/js/explore.js" defer></script>
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/navbar.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/donationComponent.js"></script>
+    <script src="/js/explore.js" defer></script>
 
 </body>
+
 </html>

@@ -1,3 +1,9 @@
+const loginRegisterHTML = `
+    <a href="/login.html" class="nav-link">Login</a>
+    <a href="/register.html" class="nav-link">Join Us</a>
+`;
+
+
 let cachedUser = null;
 
 /* ================= USER PROFILE ================= */
@@ -5,19 +11,20 @@ let cachedUser = null;
 async function getUserProfile() {
     if (cachedUser) return cachedUser;
 
+    const token = localStorage.getItem("token");
+
+    // If no token → user not logged in
+    if (!token) return null;
+
     try {
         const response = await api.get("/users/profile");
         cachedUser = response.data.user;
         return cachedUser;
     } catch (error) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "/login.html";
-        }
-        throw error;
+        localStorage.removeItem("token");
+        return null;  // Don't redirect anymore
     }
 }
-
 
 /* ================= LOAD NAVBAR ================= */
 
@@ -48,29 +55,71 @@ async function initNavbar() {
     const logoutBtn = document.getElementById("logoutBtn");
     const adminPanelLink = document.getElementById("adminPanelLink");
     const startCampaignLink = document.getElementById("startCampaignLink");
+    const exploreCampaignLink = document.getElementById("exploreCampaignLink");
+    const transactionsLink = document.getElementById("transactionsLink");
 
     try {
         const user = await getUserProfile();
+
+        if (!user) {
+            // Guest Mode
+            document.querySelector(".nav-right").innerHTML = loginRegisterHTML;
+
+            if (startCampaignLink) {
+                startCampaignLink.style.display = "none";
+            }
+
+            return;
+        }
 
         // Set user name
         if (navUserName) {
             navUserName.textContent = user.name;
         }
 
-        // Admin visibility
-        if (adminPanelLink) {
-            if (user.role === "ADMIN") {
+        /* ================= ROLE BASED NAV ================= */
+
+        if (user.role === "ADMIN") {
+
+            // Hide Start Campaign, explore / Manage Campaign
+            if (startCampaignLink) {
+                startCampaignLink.style.display = "none";
+            }
+
+            if (exploreCampaignLink) {
+                exploreCampaignLink.style.display = "none";
+            }
+
+            // Hide Transactions
+            if (transactionsLink) {
+                transactionsLink.style.display = "none";
+            }
+
+            // Show Admin Panel
+            if (adminPanelLink) {
                 adminPanelLink.style.display = "block";
                 adminPanelLink.href = "/admin.html";
-            } else {
+            }
+
+        } else if (user.role === "CHARITY") {
+
+            // Convert Start Campaign to Manage Campaign
+            if (startCampaignLink) {
+                startCampaignLink.textContent = "Manage Campaign";
+                startCampaignLink.href = "/manage-campaign.html";
+            }
+
+            // Hide Admin Panel
+            if (adminPanelLink) {
                 adminPanelLink.style.display = "none";
             }
-        }
 
-        // Charity visibility
-        if (startCampaignLink && user.role === "CHARITY") {
-            startCampaignLink.textContent = "Manage Campaign";
-            startCampaignLink.href = "/manage-campaign.html";
+        } else {
+            // Normal USER
+
+            if (adminPanelLink) {
+                adminPanelLink.style.display = "none";
+            }
         }
 
     } catch (error) {
@@ -81,7 +130,6 @@ async function initNavbar() {
     highlightActiveLink();
     setupDropdown();
 }
-
 
 /* ================= LOGOUT ================= */
 

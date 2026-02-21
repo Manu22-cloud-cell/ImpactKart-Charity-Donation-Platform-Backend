@@ -25,8 +25,9 @@ app.use("/api/donations",donationRoutes);
 app.use("/api/impact-reports",impactReportRoutes);
 
 app.get("/", (req, res) => {
-    res.json({ message: "ImpactKart API running" });
+    res.sendFile(path.join(__dirname, "..", "views", "dashboard.html"));
 });
+
 
 module.exports = app;
 

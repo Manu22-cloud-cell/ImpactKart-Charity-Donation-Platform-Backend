@@ -11,6 +11,8 @@
 
 <body>
 
+    <div id="navbarContainer"></div>
+
     <div class="admin-container">
 
         <!-- Sidebar -->
@@ -117,6 +119,11 @@
     </div>
 
     <script src="/js/api.js"></script>
+    <script src="/js/authGuard.js"></script>
+    <script>
+        requireAdmin();
+    </script>
+    <script src="/js/navbar.js"></script>
     <script src="/js/admin.js"></script>
 
     <!-- Confirmation Modal -->

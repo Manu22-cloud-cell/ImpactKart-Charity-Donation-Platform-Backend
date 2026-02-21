@@ -23,7 +23,13 @@ api.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem("token");
-            window.location.href = "/login.html";
+
+            // Only redirect if NOT already on public pages
+            const publicPages = ["/", "/dashboard.html", "/login.html", "/register.html"];
+
+            if (!publicPages.includes(window.location.pathname)) {
+                window.location.href = "/login.html";
+            }
         }
         return Promise.reject(error);
     }

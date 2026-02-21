@@ -113,6 +113,9 @@ exports.rejectCharity = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll({
+            where: {
+                role:["USER","CHARITY"],
+            },
             attributes: { exclude: ["password"] }
         });
 
@@ -126,23 +129,42 @@ exports.getAllUsers = async (req, res) => {
 
 //UPDATE USER ROLE
 
+// UPDATE USER ROLE (Secure Version)
 exports.updateUserRole = async (req, res) => {
     try {
         const { role } = req.body;
-        const userId = req.params.id;
-
-        if (req.user.userId === userId) {
-            return res.status(400).json({ message: "Cannot change own role" });
-        }
+        const userId = parseInt(req.params.id);
 
         const validRoles = ["USER", "CHARITY", "ADMIN"];
+
         if (!validRoles.includes(role)) {
             return res.status(400).json({ message: "Invalid role" });
         }
 
-        await User.update({ role }, { where: { id: userId } });
+        const user = await User.findByPk(userId);
 
-        res.json({ message: "User role updated" });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Prevent changing own role
+        if (req.user.userId === userId) {
+            return res.status(400).json({
+                message: "Cannot change your own role"
+            });
+        }
+
+        // Prevent modifying ADMIN role
+        if (user.role === "ADMIN") {
+            return res.status(403).json({
+                message: "Admin role cannot be modified"
+            });
+        }
+
+        user.role = role;
+        await user.save();
+
+        res.json({ message: "User role updated successfully" });
 
     } catch (error) {
         console.log(error);
