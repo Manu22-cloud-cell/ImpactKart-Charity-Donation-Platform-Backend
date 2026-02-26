@@ -4,6 +4,7 @@ const User=require("./user");
 const Charity=require("./charity");
 const Donation=require("./donation");
 const ImpactReport=require("./impactReport");
+const ForgotPasswordRequest=require("./forgotPassword");
 
 User.hasOne(Charity,{foreignKey:"createdBy"});
 Charity.belongsTo(User,{foreignKey:"createdBy"});
@@ -17,10 +18,14 @@ Donation.belongsTo(Charity,{foreignKey:"charityId"});
 Charity.hasMany(ImpactReport,{foreignKey:"charityId"});
 ImpactReport.belongsTo(Charity,{foreignKey:"charityId"});
 
+User.hasMany(ForgotPasswordRequest);
+ForgotPasswordRequest.belongsTo(User);
+
 module.exports= {
     sequelize,
     User,
     Charity,
     Donation,
     ImpactReport,
+    ForgotPasswordRequest,
 };

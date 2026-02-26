@@ -8,6 +8,7 @@ const charityRoutes = require("./routes/charityRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const donationRoutes=require("./routes/donationRoutes");
 const impactReportRoutes=require("./routes/impactReportRoutes");
+const passwordRoutes=require("./routes/passwordRoutes");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api/charities", charityRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/donations",donationRoutes);
 app.use("/api/impact-reports",impactReportRoutes);
+app.use("/api/password",passwordRoutes);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "views", "dashboard.html"));

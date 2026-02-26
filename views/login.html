@@ -25,6 +25,10 @@
             <button type="submit">Login</button>
         </form>
 
+        <p class="forgot-password">
+            <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+        </p>
+
         <p class="switch">
             New to ImpactKart?
             <a href="/register.html">Register now</a>
@@ -33,10 +37,26 @@
         <p id="message"></p>
     </div>
 
+    <div id="forgotModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h3>Reset Password</h3>
+
+            <form id="forgotForm">
+                <input type="email" id="forgotEmail" placeholder="Enter your email" required />
+                <button type="submit">Send Reset Link</button>
+            </form>
+
+            <p id="forgotMessage"></p>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/api.js"></script>
     <script src="/js/passwordToggle.js"></script>
     <script src="/js/login.js"></script>
+    <script src="/js/forgotPassword.js"></script>
+
 </body>
 
 </html>
