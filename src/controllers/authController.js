@@ -1,90 +1,33 @@
-const bcrypt = require("bcryptjs");
-const { Op } = require("sequelize");
-const User = require("../models/user");
-const { generateToken } = require("../utils/jwt")
+const asyncHandler = require("../middlewares/asyncHandler");
+const authService = require("../services/authService");
 
-//Register
 
-exports.register = async (req, res) => {
-    try {
-        const { name, email, phone, password } = req.body;
+// REGISTER
 
-        if (!name || !email || !phone || !password) {
-            return res.status(400).json({
-                message: "All fields are required"
-            });
-        }
+exports.register = asyncHandler(async (req, res) => {
 
-        const existingUser = await User.findOne({
-            where: { email }
-        });
+    const user = await authService.registerUser(req.body);
 
-        if (existingUser) {
-            return res.status(409).json({
-                message: "Email already exists"
-            });
-        }
+    res.status(201).json({
+        message: "User registered successfully",
+        userId: user.id
+    });
 
-        const user = await User.create({
-            name,
-            email,
-            phone,
-            password
-        });
+});
 
-        res.status(201).json({
-            message: "User registered successfully",
-            userId: user.id
-        });
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Registration failed"
-        });
-    }
-};
 
-//LOGIN
+// LOGIN
 
-exports.login = async (req, res) => {
-    try {
+exports.login = asyncHandler(async (req, res) => {
 
-        const { loginId, password } = req.body;
+    const { loginId, password } = req.body;
 
-        if (!loginId || !password) {
-            return res.status(400).json({
-                message: "Login ID and password required"
-            });
-        }
+    const token = await authService.loginUser(loginId, password);
 
-        const user = await User.findOne({
-            where: {
-                [Op.or]: [{ email: loginId }, { phone: loginId }],
-            },
-        });
+    res.status(200).json({
+        message: "Login successfull",
+        token
+    });
 
-        if (!user) {
-            return res.status(401).json({ message: "Invalid credentials" })
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-
-        const token = generateToken({
-            userId: user.id,
-            role: user.role
-        });
-
-        res.status(200).json({
-            message: "Login successfull",
-            token
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Login failed" });
-    }
-};
+});
