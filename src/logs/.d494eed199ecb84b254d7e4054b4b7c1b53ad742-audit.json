@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\DELL\\Desktop\\sharpenerProjects\\ImpactKart-backend\\src\\logs\\.d494eed199ecb84b254d7e4054b4b7c1b53ad742-audit.json",
+    "files": [
+        {
+            "date": 1772960211608,
+            "name": "C:\\Users\\DELL\\Desktop\\sharpenerProjects\\ImpactKart-backend\\src\\logs\\access-2026-03-08.log",
+            "hash": "8e0408e00c5ac0b6f39563e784d5bb3f42fee7bab35ec13255078a15e8f03ecc"
+        }
+    ],
+    "hashType": "sha256"
+}

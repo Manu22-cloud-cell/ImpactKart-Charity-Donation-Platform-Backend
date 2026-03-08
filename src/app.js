@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const morgan = require("morgan");
+
+const logger = require("./utils/logger");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -14,11 +17,32 @@ const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
+// Morgan → Winston Stream
+
+const stream = {
+    write: (message) => logger.info(message.trim()),
+};
+
+
+// Middleware
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "..", "views")));
+
+
+// Request Logging
+
+app.use(
+    morgan("combined", {
+        stream,
+    })
+);
+
+
+// Routes
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -31,6 +55,9 @@ app.use("/api/password", passwordRoutes);
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "views", "dashboard.html"));
 });
+
+
+// Global Error Handler
 
 app.use(errorHandler);
 

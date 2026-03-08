@@ -1,0 +1,4 @@
+2026-03-08 14:31:25 [ERROR] : POST /api/auth/login 401 - Invalid credentials
+Error: Invalid credentials
+    at exports.loginUser (C:\Users\DELL\Desktop\sharpenerProjects\ImpactKart-backend\src\services\authService.js:51:15)
+    at async C:\Users\DELL\Desktop\sharpenerProjects\ImpactKart-backend\src\controllers\authController.js:26:19
