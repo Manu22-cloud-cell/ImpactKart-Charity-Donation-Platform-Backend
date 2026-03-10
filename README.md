@@ -1,6 +1,6 @@
 # ImpactKart – Charity Donation Platform (Backend)
 
-ImpactKart is a backend-driven charity donation platform built using Node.js, Express, and Sequelize.  
+ImpactKart is a Full Stack charity donation platform built using Node.js, Express, and Sequelize and deployed on the AWS EC2.
 It allows users to donate to verified charities, charities to manage impact reports, and admins to moderate the platform.
 
 ---
@@ -21,6 +21,7 @@ It allows users to donate to verified charities, charities to manage impact repo
 ## Tech Stack
 
 - **Backend**: Node.js, Express
+- **Frontend**: HTML,CSS & Vanilla JS(Will be upgraded to React framework)
 - **Database**: MySQL
 - **ORM**: Sequelize
 - **Authentication**: JWT
@@ -190,8 +191,9 @@ GET /api/admin/donations
 
 ## Notes
 
-Razorpay webhooks are planned for future improvements
-Pagination & deployment not implemented yet (learning-focused project)
+Razorpay webhooks are planned for future improvements.
+Frontend will be deployed using React framework.
+Pagination not implemented yet (learning-focused project).
 
 ## Author
 Manoj K Y
