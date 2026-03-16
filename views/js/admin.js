@@ -30,19 +30,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Sidebar Navigation
     sidebarItems.forEach(item => {
         item.addEventListener("click", () => {
+
+            const section = item.dataset.section;
+
+            if (section === "logout") {
+                localStorage.removeItem("token");
+                window.location.href = "/login.html";
+                return;
+            }
+
             document.querySelectorAll(".sidebar li").forEach(li => li.classList.remove("active"));
             item.classList.add("active");
 
             document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-            document.getElementById(item.dataset.section + "Section").classList.add("active");
+            document.getElementById(section + "Section").classList.add("active");
         });
     });
-
-    logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("token");
-        window.location.href = "/login.html";
-    });
-
+    
     // Modal Buttons
     document.getElementById("cancelBtn").addEventListener("click", closeModal);
 
