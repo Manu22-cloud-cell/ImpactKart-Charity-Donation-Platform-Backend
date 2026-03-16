@@ -52,9 +52,12 @@ exports.rejectCharity = asyncHandler(async (req, res) => {
 // GET ALL USERS
 exports.getAllUsers = asyncHandler(async (req, res) => {
 
-    const users = await adminService.getAllUsers();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
 
-    res.json(users);
+    const result = await adminService.getAllUsers(page, limit);
+
+    res.json(result);
 
 });
 
@@ -81,8 +84,11 @@ exports.updateUserRole = asyncHandler(async (req, res) => {
 // GET ALL DONATIONS
 exports.getAllDonations = asyncHandler(async (req, res) => {
 
-    const donations = await adminService.getAllDonations();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
 
-    res.json(donations);
+    const result = await adminService.getAllDonations(page, limit);
+
+    res.json(result);
 
 });

@@ -61,8 +61,18 @@ exports.rejectCharity = async (charityId) => {
 
 
 // GET ALL USERS
-exports.getAllUsers = async () => {
-    return adminRepo.getAllUsers();
+exports.getAllUsers = async (page, limit) => {
+
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await adminRepo.getAllUsers(limit, offset);
+
+    return {
+        data: rows,
+        totalItems: count,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page
+    };
 };
 
 
@@ -96,6 +106,16 @@ exports.updateUserRole = async (userId, role, adminId) => {
 
 
 // GET ALL DONATIONS
-exports.getAllDonations = async () => {
-    return adminRepo.getAllDonations();
+exports.getAllDonations = async (page, limit) => {
+
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await adminRepo.getAllDonations(limit, offset);
+
+    return {
+        data: rows,
+        totalItems: count,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page
+    };
 };

@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById(section + "Section").classList.add("active");
         });
     });
-    
+
     // Modal Buttons
     document.getElementById("cancelBtn").addEventListener("click", closeModal);
 
@@ -114,10 +114,10 @@ async function loadDashboardStats() {
     const pending = await api.get(`/admin/charities/pending?page=1&limit=1`);
     const donations = await api.get("/admin/donations");
 
-    document.getElementById("totalUsers").textContent = users.data.length;
+    document.getElementById("totalUsers").textContent = users.data.totalItems;
     document.getElementById("totalCharities").textContent = charities.data.length;
     document.getElementById("pendingCharitiesCount").textContent = pending.data.totalItems;
-    document.getElementById("totalDonations").textContent = donations.data.length;
+    document.getElementById("totalDonations").textContent = donations.data.totalItems;
 }
 
 
@@ -223,12 +223,23 @@ async function rejectCharity(id) {
 
 // ================= USERS =================
 
-async function loadUsers() {
-    const response = await api.get("/admin/users");
+let usersPage = 1;
+let usersTotalPages = 1;
+
+async function loadUsers(page = 1) {
+
+    const response = await api.get(`/admin/users?page=${page}&limit=${itemsPerPage}`);
+
+    const { data, totalPages, currentPage } = response.data;
+
+    usersTotalPages = totalPages;
+    usersPage = currentPage;
+
     const table = document.getElementById("usersTable");
     table.innerHTML = "";
 
-    response.data.forEach(user => {
+    data.forEach(user => {
+
         const row = `
             <tr>
                 <td>${user.name}</td>
@@ -244,8 +255,10 @@ async function loadUsers() {
                 </td>
             </tr>
         `;
+
         table.innerHTML += row;
     });
+
 }
 
 async function changeRole(userId, role) {
@@ -257,12 +270,23 @@ async function changeRole(userId, role) {
 
 // ================= DONATIONS =================
 
-async function loadDonations() {
-    const response = await api.get("/admin/donations");
+let donationsPage = 1;
+let donationsTotalPages = 1;
+
+async function loadDonations(page = 1) {
+
+    const response = await api.get(`/admin/donations?page=${page}&limit=${itemsPerPage}`);
+
+    const { data, totalPages, currentPage } = response.data;
+
+    donationsTotalPages = totalPages;
+    donationsPage = currentPage;
+
     const table = document.getElementById("donationsTable");
     table.innerHTML = "";
 
-    response.data.forEach(donation => {
+    data.forEach(donation => {
+
         const row = `
             <tr>
                 <td>${donation.User.name}</td>
@@ -270,8 +294,11 @@ async function loadDonations() {
                 <td>${donation.amount}</td>
             </tr>
         `;
+
         table.innerHTML += row;
+
     });
+
 }
 
 

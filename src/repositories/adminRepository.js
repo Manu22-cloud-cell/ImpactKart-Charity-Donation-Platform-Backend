@@ -33,10 +33,13 @@ exports.saveCharity = (charity) => {
 
 // USERS
 
-exports.getAllUsers = () => {
-    return User.findAll({
+exports.getAllUsers = (limit, offset) => {
+    return User.findAndCountAll({
         where: { role: ["USER", "CHARITY"] },
-        attributes: { exclude: ["password"] }
+        attributes: { exclude: ["password"] },
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]]
     });
 };
 
@@ -50,11 +53,14 @@ exports.saveUser = (user) => {
 
 // DONATIONS
 
-exports.getAllDonations = () => {
-    return Donation.findAll({
+exports.getAllDonations = (limit, offset) => {
+    return Donation.findAndCountAll({
         include: [
             { model: User, attributes: ["name", "email"] },
-            { model: Charity, attributes: ["name"] },
+            { model: Charity, attributes: ["name"] }
         ],
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]]
     });
 };
