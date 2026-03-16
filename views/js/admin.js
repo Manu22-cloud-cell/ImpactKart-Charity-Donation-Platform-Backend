@@ -109,17 +109,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ================= DASHBOARD =================
 
 async function loadDashboardStats() {
-    const users = await api.get("/admin/users");
+
+    const users = await api.get(`/admin/users?page=1&limit=1`);
     const charities = await api.get("/admin/charities");
     const pending = await api.get(`/admin/charities/pending?page=1&limit=1`);
-    const donations = await api.get("/admin/donations");
+    const donations = await api.get(`/admin/donations?page=1&limit=1`);
 
     document.getElementById("totalUsers").textContent = users.data.totalItems;
     document.getElementById("totalCharities").textContent = charities.data.length;
     document.getElementById("pendingCharitiesCount").textContent = pending.data.totalItems;
     document.getElementById("totalDonations").textContent = donations.data.totalItems;
-}
 
+}
 
 // ================= PENDING CHARITIES =================
 
@@ -232,6 +233,8 @@ async function loadUsers(page = 1) {
 
     const { data, totalPages, currentPage } = response.data;
 
+    if (!data || data.length === 0) return;
+
     usersTotalPages = totalPages;
     usersPage = currentPage;
 
@@ -278,6 +281,8 @@ async function loadDonations(page = 1) {
     const response = await api.get(`/admin/donations?page=${page}&limit=${itemsPerPage}`);
 
     const { data, totalPages, currentPage } = response.data;
+
+    if (!data || data.length === 0) return;
 
     donationsTotalPages = totalPages;
     donationsPage = currentPage;
