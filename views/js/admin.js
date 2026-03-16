@@ -139,15 +139,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadDashboardStats() {
 
-    const users = await api.get(`/admin/users?page=1&limit=1`);
-    const donations = await api.get(`/admin/donations?page=1&limit=1`);
-    const pending = await api.get(`/admin/charities/pending?page=1&limit=1`);
-    const charities = await api.get(`/admin/charities`);
+    const response = await api.get("/admin/dashboard");
 
-    document.getElementById("totalUsers").textContent = users.data.totalItems;
-    document.getElementById("totalCharities").textContent = charities.data.length;
-    document.getElementById("pendingCharitiesCount").textContent = pending.data.totalItems;
-    document.getElementById("totalDonations").textContent = donations.data.totalItems;
+    const stats = response.data;
+
+    document.getElementById("totalUsers").textContent = stats.totalUsers;
+    document.getElementById("totalCharities").textContent = stats.totalCharities;
+    document.getElementById("pendingCharitiesCount").textContent = stats.pendingCharities;
+    document.getElementById("totalDonations").textContent = stats.totalDonations;
 
 }
 

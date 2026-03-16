@@ -1,6 +1,14 @@
 const adminRepo = require("../repositories/adminRepository");
 const AppError = require("../utils/AppError");
 
+//GET DASHBOARD STATS
+exports.getDashboardStats = async () => {
+
+    const stats = await adminRepo.getDashboardStats();
+
+    return stats;
+
+};
 
 // GET ALL CHARITIES
 exports.getAllCharities = async () => {

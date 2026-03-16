@@ -2,6 +2,15 @@ const asyncHandler = require("../middlewares/asyncHandler");
 const adminService = require("../services/adminService");
 
 
+//GET dashboard stats
+exports.getDashboardStats = asyncHandler(async (req, res) => {
+
+    const stats = await adminService.getDashboardStats();
+
+    res.json(stats);
+
+});
+
 // GET ALL CHARITIES
 exports.getAllCharities = asyncHandler(async (req, res) => {
 

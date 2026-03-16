@@ -1,5 +1,35 @@
-const { Charity, User, Donation } = require("../models");
+const { Charity, User, Donation} = require("../models");
 const { Op }=require("sequelize");
+
+//GET DASHBOARD STATS
+exports.getDashboardStats = async () => {
+
+    const totalUsers = await User.count({
+        where: { role: ["USER", "CHARITY"] }
+    });
+
+    const totalCharities = await Charity.count();
+
+    const pendingCharities = await Charity.count({
+        where: { status: "PENDING" }
+    });
+
+    const totalDonations = await Donation.count({
+        where: { status: "SUCCESS" }
+    });
+
+    const totalAmountRaised = await Donation.sum("amount", {
+        where: { status: "SUCCESS" }
+    });
+
+    return {
+        totalUsers,
+        totalCharities,
+        pendingCharities,
+        totalDonations,
+        totalAmountRaised: totalAmountRaised || 0
+    };
+};
 
 // CHARITIES
 
