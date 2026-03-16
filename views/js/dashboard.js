@@ -1,6 +1,6 @@
 // ================= GLOBAL STATE =================
 let currentPage = 1;
-const limit = 6;
+const limit = 9;
 let currentSearch = "";
 let currentCategory = "";
 

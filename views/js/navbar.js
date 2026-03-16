@@ -1,5 +1,5 @@
 const loginRegisterHTML = `
-    <a href="/login.html" class="nav-link">Login</a>
+    <a href="/login.html" class="nav-link">Login/</a>
     <a href="/register.html" class="nav-link">Join Us</a>
 `;
 

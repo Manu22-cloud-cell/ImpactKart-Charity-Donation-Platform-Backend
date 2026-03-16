@@ -14,6 +14,7 @@ const impactReportRoutes = require("./routes/impactReportRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
+const {apiLimiter}=require("./middlewares/rateLimiter");
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use(
 
 // Routes
 
+app.use("/api",apiLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/charities", charityRoutes);
