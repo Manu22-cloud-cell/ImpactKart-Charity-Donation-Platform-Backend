@@ -2,7 +2,7 @@ const api = axios.create({
     baseURL:
         window.location.hostname === "localhost"
             ? "http://localhost:3000/api"
-            : "/api"
+            : "http://40.192.99.62/api"
 });
 
 // Attach token to every request
