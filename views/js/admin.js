@@ -98,6 +98,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // USERS PAGINATION
+
+    document.getElementById("usersPrev").addEventListener("click", () => {
+        if (usersPage > 1) {
+            loadUsers(usersPage - 1);
+        }
+    });
+
+    document.getElementById("usersNext").addEventListener("click", () => {
+        if (usersPage < usersTotalPages) {
+            loadUsers(usersPage + 1);
+        }
+    });
+
+
+    // DONATIONS PAGINATION
+
+    document.getElementById("donationsPrev").addEventListener("click", () => {
+        if (donationsPage > 1) {
+            loadDonations(donationsPage - 1);
+        }
+    });
+
+    document.getElementById("donationsNext").addEventListener("click", () => {
+        if (donationsPage < donationsTotalPages) {
+            loadDonations(donationsPage + 1);
+        }
+    });
+
     // Initial Load
     await loadDashboardStats();
     await loadPendingCharities();
@@ -261,6 +290,12 @@ async function loadUsers(page = 1) {
 
     });
 
+    document.getElementById("usersPageInfo").textContent =
+        `Page ${usersPage} of ${usersTotalPages}`;
+
+    document.getElementById("usersPrev").disabled = usersPage === 1;
+    document.getElementById("usersNext").disabled = usersPage === usersTotalPages;
+
 }
 
 async function changeRole(userId, role) {
@@ -300,6 +335,12 @@ async function loadDonations(page = 1) {
         table.innerHTML += row;
 
     });
+
+    document.getElementById("donationsPageInfo").textContent =
+        `Page ${donationsPage} of ${donationsTotalPages}`;
+
+    document.getElementById("donationsPrev").disabled = donationsPage === 1;
+    document.getElementById("donationsNext").disabled = donationsPage === donationsTotalPages;
 
 }
 
