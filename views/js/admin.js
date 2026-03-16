@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await loadNavbar();
 
-    const logoutBtn = document.getElementById("logoutBtn");
     const sidebarItems = document.querySelectorAll(".sidebar li[data-section]");
     const prevBtn = document.getElementById("prevPage");
     const nextBtn = document.getElementById("nextPage");
@@ -127,11 +126,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Initial Load
-    await loadDashboardStats();
-    await loadPendingCharities();
-    await loadUsers();
-    await loadDonations();
+
+    await Promise.all([
+        await loadDashboardStats(),
+        loadPendingCharities(),
+        loadUsers(),
+        loadDonations()
+    ]);
 });
 
 
@@ -147,6 +148,7 @@ async function loadDashboardStats() {
     document.getElementById("totalCharities").textContent = stats.totalCharities;
     document.getElementById("pendingCharitiesCount").textContent = stats.pendingCharities;
     document.getElementById("totalDonations").textContent = stats.totalDonations;
+    document.getElementById("totalAmountRaised").textContent = stats.totalAmountRaised;
 
 }
 
