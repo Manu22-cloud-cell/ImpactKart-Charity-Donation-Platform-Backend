@@ -93,9 +93,29 @@ function renderCampaigns(campaigns) {
         const card = document.createElement("div");
         card.classList.add("campaign-card");
 
-        card.innerHTML = `...`;
+        card.innerHTML = `
+            <h3>${campaign.name}</h3>
+            <p>${campaign.location || ""}</p>
+            <p>${campaign.description.substring(0, 80)}...</p>
 
-        card.addEventListener("click", () => {
+            <div class="progress-bar">
+                <div class="progress" style="width:${progressPercent}%"></div>
+            </div>
+
+            <p>₹${collected} raised of ₹${goal}</p>
+
+            <button 
+             class="donate-btn"
+             data-id="${campaign.id}"
+             data-name="${campaign.name}">
+             Make an Impact
+            </button>
+        `;
+
+        card.addEventListener("click", (e) => {
+
+            if (e.target.classList.contains("donate-btn")) return;
+
             window.location.href = `/charity-details.html?id=${campaign.id}`;
         });
 
