@@ -35,7 +35,7 @@ exports.saveCharity = (charity) => {
 
 exports.getAllUsers = (limit, offset) => {
     return User.findAndCountAll({
-        where: { role: ["USER", "CHARITY"] },
+        where: { role: { [Op.in]: ["USER", "CHARITY"] } },
         attributes: { exclude: ["password"] },
         limit,
         offset,
