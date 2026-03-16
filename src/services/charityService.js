@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, col } = require("sequelize");
 const charityRepo = require("../repositories/charityRepository");
 const AppError = require("../utils/AppError");
 
@@ -88,7 +88,12 @@ exports.listCharities = async (query) => {
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 6;
 
-    const where = { status: "APPROVED" };
+    const where = {
+        status: "APPROVED",
+        collectedAmount: {
+            [Op.lt]: sequelize.col("goalAmount")
+        }
+    };
 
     if (category) where.category = category;
 

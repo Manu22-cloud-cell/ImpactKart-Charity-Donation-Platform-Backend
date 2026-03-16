@@ -77,10 +77,14 @@ function renderCampaigns(campaigns) {
 
     if (!container) return;
 
+    const fragment = document.createDocumentFragment();
+
     campaigns.forEach(campaign => {
 
         const collected = Number(campaign.collectedAmount) || 0;
         const goal = Number(campaign.goalAmount) || 0;
+
+        if (collected >= goal) return;
 
         const progressPercent = goal > 0
             ? Math.min((collected / goal) * 100, 100)
@@ -89,32 +93,16 @@ function renderCampaigns(campaigns) {
         const card = document.createElement("div");
         card.classList.add("campaign-card");
 
-        card.innerHTML = `
-            <h3>${campaign.name}</h3>
-            <p>${campaign.location || ""}</p>
-            <p>${campaign.description.substring(0, 80)}...</p>
+        card.innerHTML = `...`;
 
-            <div class="progress-bar">
-                <div class="progress" style="width:${progressPercent}%"></div>
-            </div>
-
-            <p>₹${collected} raised of ₹${goal}</p>
-
-            <button 
-             class="donate-btn"
-             data-id="${campaign.id}"
-             data-name="${campaign.name}">
-             Make an Impact
-            </button>
-        `;
-
-        // Navigate only when clicking card (NOT donate button)
         card.addEventListener("click", () => {
             window.location.href = `/charity-details.html?id=${campaign.id}`;
         });
 
-        container.appendChild(card);
+        fragment.appendChild(card);
     });
+
+    container.appendChild(fragment);
 }
 
 
@@ -191,11 +179,10 @@ window.addEventListener("scroll", () => {
 
     scrollTimeout = setTimeout(() => {
 
-        const scrollTop = window.scrollY;
-        const windowHeight = window.innerHeight;
-        const fullHeight = document.body.offsetHeight;
+        const nearBottom =
+            window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
 
-        if (scrollTop + windowHeight >= fullHeight - 150) {
+        if (nearBottom) {
             loadCampaigns();
         }
 
@@ -209,6 +196,3 @@ window.addEventListener("click", function (e) {
     }
 });
 
-
-// ================= START =================
-document.addEventListener("DOMContentLoaded", initDashboard);

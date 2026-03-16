@@ -1,6 +1,6 @@
 // ================= GLOBAL STATE =================
 let currentPage = 1;
-const limit = 6;
+const limit = 9;
 
 let currentSearch = "";
 let currentCategory = "";
@@ -13,11 +13,18 @@ const loadingIndicator = document.getElementById("loadingIndicator");
 const noResults = document.getElementById("noResults");
 const activeFilters = document.getElementById("activeFilters");
 
+
+// ================= INIT =================
 document.addEventListener("DOMContentLoaded", async () => {
-    await loadNavbar();   // Load navbar first
+
+    await loadNavbar();
+    loadCampaigns(true);
+
+    const payBtn = document.getElementById("payBtn");
+    if (payBtn) {
+        payBtn.addEventListener("click", startDonation);
+    }
 });
-
-
 
 // ================= LOAD =================
 async function loadCampaigns(reset = false) {
@@ -64,11 +71,18 @@ async function loadCampaigns(reset = false) {
 // ================= RENDER =================
 function renderCampaigns(charities) {
 
+    const fragment = document.createDocumentFragment();
+
     charities.forEach(charity => {
 
         const collected = Number(charity.collectedAmount) || 0;
         const goal = Number(charity.goalAmount) || 0;
-        const percent = goal > 0 ? Math.min((collected / goal) * 100, 100) : 0;
+
+        if (collected >= goal) return;
+
+        const percent = goal > 0
+            ? Math.min((collected / goal) * 100, 100)
+            : 0;
 
         const card = document.createElement("div");
         card.className = "campaign-card";
@@ -92,13 +106,15 @@ function renderCampaigns(charities) {
             </button>
         `;
 
-        // Navigate when clicking card
         card.addEventListener("click", () => {
             window.location.href = `/charity-details.html?id=${charity.id}`;
         });
 
-        campaignList.appendChild(card);
+        fragment.appendChild(card);
+
     });
+
+    campaignList.appendChild(fragment);
 }
 
 // ================= SEARCH =================
@@ -191,12 +207,15 @@ function throttle(fn, delay) {
 }
 
 window.addEventListener("scroll", throttle(() => {
-    if (
-        window.innerHeight + window.scrollY
-        >= document.body.offsetHeight - 200
-    ) {
-        loadCampaigns();
-    }
+
+    if (isLoading) return;
+
+    const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 200;
+
+    if (nearBottom) loadCampaigns();
+
 }, 300));
 
 window.addEventListener("click", function (e) {
@@ -206,12 +225,3 @@ window.addEventListener("click", function (e) {
     }
 });
 
-// ================= INIT =================
-document.addEventListener("DOMContentLoaded", () => {
-    loadCampaigns(true);
-
-    const payBtn = document.getElementById("payBtn");
-    if (payBtn) {
-        payBtn.addEventListener("click", startDonation);
-    }
-});
