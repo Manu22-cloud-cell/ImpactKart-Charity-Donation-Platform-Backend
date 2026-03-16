@@ -1,4 +1,5 @@
 const { Charity, User, Donation } = require("../models");
+const { Op }=require("sequelize");
 
 // CHARITIES
 
