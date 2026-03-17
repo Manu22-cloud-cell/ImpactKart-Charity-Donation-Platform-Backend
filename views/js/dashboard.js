@@ -1,7 +1,7 @@
 let socket;
 
 if (typeof io !== "undefined") {
-    socket = io("http://40.192.99.62:3000");
+    socket = io();
 } else {
     console.error("Socket.io not loaded");
 }
