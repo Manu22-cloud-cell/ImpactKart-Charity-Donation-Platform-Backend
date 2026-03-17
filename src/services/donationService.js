@@ -39,7 +39,7 @@ exports.createDonationOrder = async (userId, data) => {
 
 
 // VERIFY PAYMENT
-exports.verifyPayment = async (data) => {
+exports.verifyPayment = async (data, io) => {
 
     const {
         razorpay_order_id,
@@ -71,6 +71,8 @@ exports.verifyPayment = async (data) => {
 
     await sequelize.transaction(async (t) => {
 
+        if (donation.status === "SUCCESS") return;
+
         donation.paymentId = razorpay_payment_id;
         donation.status = "SUCCESS";
 
@@ -83,6 +85,14 @@ exports.verifyPayment = async (data) => {
         );
 
     });
+
+    //Socket.io
+    if (io) {
+        io.to(`campaign_${donation.charityId}`).emit("donationUpdate", {
+            charityId: donation.charityId,
+            amount: donation.amount / 100
+        });
+    }
 
     // Send email (non-blocking)
     try {

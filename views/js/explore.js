@@ -1,3 +1,5 @@
+const socket = io("http://40.192.99.62");
+
 // ================= GLOBAL STATE =================
 let currentPage = 1;
 const limit = 9;
@@ -115,6 +117,10 @@ function renderCampaigns(charities) {
     });
 
     campaignList.appendChild(fragment);
+
+    charities.forEach(charity => {
+        socket.emit("joinCampaign", charity.id);
+    });
 }
 
 // ================= SEARCH =================
@@ -224,4 +230,40 @@ window.addEventListener("click", function (e) {
         closeDonationModal();
     }
 });
+
+
+socket.on("donationUpdate", (data) => {
+
+    console.log("Live update:", data);
+
+    const { charityId, amount } = data;
+
+    const card = document.querySelector(`[data-id="${charityId}"]`);
+
+    if (!card) return;
+
+    const amountEl = card.querySelector("[data-amount]");
+    const progressEl = card.querySelector("[data-progress]");
+
+    if (!amountEl || !progressEl) return;
+
+    // Extract current values
+    const text = amountEl.innerText;
+    const match = text.match(/₹(\d+)\sraised\s+of\s+₹(\d+)/);
+
+    if (!match) return;
+
+    let current = parseInt(match[1]);
+    const goal = parseInt(match[2]);
+
+    // Update amount
+    current += amount;
+
+    const percent = Math.min((current / goal) * 100, 100);
+
+    // Update UI
+    amountEl.innerText = `₹${current} raised of ₹${goal}`;
+    progressEl.style.width = `${percent}%`;
+});
+
 

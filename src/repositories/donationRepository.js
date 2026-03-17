@@ -2,19 +2,6 @@ const Donation = require("../models/donation");
 const Charity = require("../models/charity");
 const User = require("../models/user");
 
-exports.getUserDonations = async (userId) => {
-    return Donation.findAll({
-        where: { userId },
-        include: [
-            {
-                model: Charity,
-                attributes: ["id", "name", "category", "location"],
-            },
-        ],
-        order: [["createdAt", "DESC"]],
-    });
-};
-
 exports.createDonation = (data) => {
     return Donation.create(data);
 };

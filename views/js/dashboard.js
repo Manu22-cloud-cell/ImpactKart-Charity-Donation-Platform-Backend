@@ -1,3 +1,5 @@
+const socket = io("http://40.192.99.62");
+
 // ================= GLOBAL STATE =================
 let currentPage = 1;
 const limit = 9;
@@ -93,24 +95,26 @@ function renderCampaigns(campaigns) {
         const card = document.createElement("div");
         card.classList.add("campaign-card");
 
+        card.setAttribute("data-id", campaign.id);
+
         card.innerHTML = `
-            <h3>${campaign.name}</h3>
-            <p>${campaign.location || ""}</p>
-            <p>${campaign.description.substring(0, 80)}...</p>
+    <h3>${campaign.name}</h3>
+    <p>${campaign.location || ""}</p>
+    <p>${campaign.description.substring(0, 80)}...</p>
 
-            <div class="progress-bar">
-                <div class="progress" style="width:${progressPercent}%"></div>
-            </div>
+    <div class="progress-bar">
+        <div class="progress" data-progress style="width:${progressPercent}%"></div>
+    </div>
 
-            <p>₹${collected} raised of ₹${goal}</p>
+    <p data-amount>₹${collected} raised of ₹${goal}</p>
 
-            <button 
-             class="donate-btn"
-             data-id="${campaign.id}"
-             data-name="${campaign.name}">
-             Make an Impact
-            </button>
-        `;
+    <button 
+     class="donate-btn"
+     data-id="${campaign.id}"
+     data-name="${campaign.name}">
+     Make an Impact
+    </button>
+`;
 
         card.addEventListener("click", (e) => {
 
@@ -123,6 +127,10 @@ function renderCampaigns(campaigns) {
     });
 
     container.appendChild(fragment);
+
+    campaigns.forEach(campaign => {
+        socket.emit("joinCampaign", campaign.id);
+    });
 }
 
 
@@ -214,5 +222,39 @@ window.addEventListener("click", function (e) {
     if (e.target === modal) {
         closeDonationModal();
     }
+});
+
+socket.on("donationUpdate", (data) => {
+
+    console.log("Live update:", data);
+
+    const { charityId, amount } = data;
+
+    const card = document.querySelector(`[data-id="${charityId}"]`);
+
+    if (!card) return;
+
+    const amountEl = card.querySelector("[data-amount]");
+    const progressEl = card.querySelector("[data-progress]");
+
+    if (!amountEl || !progressEl) return;
+
+    // Extract current values
+    const text = amountEl.innerText;
+    const match = text.match(/₹(\d+)\sraised\s+of\s+₹(\d+)/);
+
+    if (!match) return;
+
+    let current = parseInt(match[1]);
+    const goal = parseInt(match[2]);
+
+    // Update amount
+    current += amount;
+
+    const percent = Math.min((current / goal) * 100, 100);
+
+    // Update UI
+    amountEl.innerText = `₹${current} raised of ₹${goal}`;
+    progressEl.style.width = `${percent}%`;
 });
 

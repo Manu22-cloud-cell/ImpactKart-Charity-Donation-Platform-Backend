@@ -1,5 +1,8 @@
+const socket = io("http://40.192.99.62");
+
 document.addEventListener("DOMContentLoaded", async () => {
     await loadNavbar();   // Load navbar first
+    loadCharity();
 });
 
 async function loadCharity() {
@@ -10,6 +13,8 @@ async function loadCharity() {
         alert("Invalid charity ID");
         return;
     }
+
+    socket.emit("joinCampaign", id);
 
     try {
         const response = await api.get(`/charities/${id}`);
@@ -90,4 +95,20 @@ async function loadImpactReports(charityId) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadCharity);
+socket.on("donationUpdate", (data) => {
+
+    const { charityId, amount } = data;
+
+    const currentEl = document.querySelector(".info p:nth-child(3)");
+
+    if (!currentEl) return;
+
+    const match = currentEl.innerText.match(/₹(\d+)/);
+
+    if (!match) return;
+
+    let current = parseInt(match[1]);
+    current += amount;
+
+    currentEl.innerHTML = `<strong>Raised:</strong> ₹${current}`;
+});

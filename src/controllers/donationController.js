@@ -24,7 +24,7 @@ exports.createDonationOrder = asyncHandler(async (req, res) => {
 // VERIFY PAYMENT
 exports.verifyPayment = asyncHandler(async (req, res) => {
 
-    await donationService.verifyPayment(req.body);
+    await donationService.verifyPayment(req.body, req.app.get("io"));
 
     res.json({
         success: true,
