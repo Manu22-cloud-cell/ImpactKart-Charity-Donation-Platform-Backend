@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
 
     // Join campaign room
     socket.on("joinCampaign", (charityId) => {
+        console.log(`Socket ${socket.id} joined campaign_${charityId}`);
         socket.join(`campaign_${charityId}`);
     });
 

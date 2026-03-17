@@ -1,4 +1,14 @@
-const socket = io("http://40.192.99.62");
+let socket;
+
+if (typeof io !== "undefined") {
+    socket = io("http://40.192.99.62");
+} else {
+    console.error("Socket.io not loaded");
+}
+
+socket.on("connect", () => {
+    console.log("Connected:", socket.id);
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     await loadNavbar();   // Load navbar first

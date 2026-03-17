@@ -94,6 +94,8 @@ exports.verifyPayment = async (data, io) => {
         });
     }
 
+    console.log("Emitting donation update:", donation.charityId);
+
     // Send email (non-blocking)
     try {
 
