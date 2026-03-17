@@ -90,7 +90,9 @@ exports.verifyPayment = async (data, io) => {
     if (io) {
         io.to(`campaign_${donation.charityId}`).emit("donationUpdate", {
             charityId: donation.charityId,
-            amount: donation.amount / 100
+            amount: donation.amount / 100,
+            donarName:donation.User.name
+
         });
     }
 

@@ -101,18 +101,47 @@ async function loadImpactReports(charityId) {
 
 socket.on("donationUpdate", (data) => {
 
-    const { charityId, amount } = data;
+    const { charityId, amount, donorName } = data;
 
-    const currentEl = document.querySelector(".info p:nth-child(3)");
+    // SHOW MESSAGE
+    showToast(`${donorName} donated ₹${amount}`);
 
-    if (!currentEl) return;
+    // EXISTING UI UPDATE (keep this)
+    const card = document.querySelector(`[data-id="${charityId}"]`);
+    if (!card) return;
 
-    const match = currentEl.innerText.match(/₹(\d+)/);
+    const amountEl = card.querySelector("[data-amount]");
+    const progressEl = card.querySelector("[data-progress]");
+
+    if (!amountEl || !progressEl) return;
+
+    const text = amountEl.innerText;
+    const match = text.match(/₹(\d+)\sraised\s+of\s+₹(\d+)/);
 
     if (!match) return;
 
     let current = parseInt(match[1]);
+    const goal = parseInt(match[2]);
+
     current += amount;
 
-    currentEl.innerHTML = `<strong>Raised:</strong> ₹${current}`;
+    const percent = Math.min((current / goal) * 100, 100);
+
+    amountEl.innerText = `₹${current} raised of ₹${goal}`;
+    progressEl.style.width = `${percent}%`;
 });
+
+function showToast(message) {
+    const container = document.getElementById("liveNotifications");
+    if (!container) return;
+
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerText = message;
+
+    container.prepend(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
