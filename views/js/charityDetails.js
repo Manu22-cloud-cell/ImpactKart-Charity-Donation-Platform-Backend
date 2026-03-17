@@ -1,10 +1,4 @@
-let socket;
-
-if (typeof io !== "undefined") {
-    socket = io();
-} else {
-    console.error("Socket.io not loaded");
-}
+const socket = io("http://40.192.99.62");
 
 socket.on("connect", () => {
     console.log("Connected:", socket.id);

@@ -99,15 +99,17 @@ exports.verifyPayment = async (data, io) => {
     // Send email (non-blocking)
     try {
 
-        await sendDonationConfirmation({
-            to: donation.User.email,
-            name: donation.User.name,
-            amount: donation.amount / 100,
-            charityName: donation.Charity.name,
-            donation,
-            user: donation.User,
-            charity: donation.Charity
-        });
+        if (donation.User) {
+            await sendDonationConfirmation({
+                to: donation.User.email,
+                name: donation.User.name,
+                amount: donation.amount / 100,
+                charityName: donation.Charity.name,
+                donation,
+                user: donation.User,
+                charity: donation.Charity
+            });
+        }
 
     } catch (emailError) {
         console.error("Email sending failed:", emailError);
