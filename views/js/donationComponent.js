@@ -1,5 +1,4 @@
 // ================= DONATION COMPONENT =================
-const socket = io("http://40.192.99.62");
 
 const RAZORPAY_KEY = "rzp_test_SBCOdQy5WWyIor";
 
