@@ -1,4 +1,5 @@
 // ================= DONATION COMPONENT =================
+const socket = io("http://40.192.99.62");
 
 const RAZORPAY_KEY = "rzp_test_SBCOdQy5WWyIor";
 
@@ -134,6 +135,7 @@ async function verifyPayment(response, donationId) {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 donationId,
+                socketId:socket.id,
             }),
         });
 

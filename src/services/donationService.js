@@ -45,8 +45,10 @@ exports.verifyPayment = async (data, io) => {
         razorpay_order_id,
         razorpay_payment_id,
         razorpay_signature,
-        donationId
+        donationId,
+        socketId,
     } = data;
+
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -88,15 +90,18 @@ exports.verifyPayment = async (data, io) => {
 
     //Socket.io
     if (io) {
-        io.to(`campaign_${donation.charityId}`).emit("donationUpdate", {
+        let emitter = io.to(`campaign_${donation.charityId}`);
+
+        if (socketId) {
+            emitter = emitter.except(socketId);
+        }
+
+        emitter.emit("donationUpdate", {
             charityId: donation.charityId,
             amount: donation.amount / 100,
-            donorName:donation.User.name
-
+            donorName: donation.User.name
         });
     }
-
-    console.log("Emitting donation update:", donation.charityId);
 
     // Send email (non-blocking)
     try {
