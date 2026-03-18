@@ -19,7 +19,6 @@ const generateDonationReceiptBuffer = (donation, user, charity) => {
         });
 
         const amountInRupees = (donation.amount / 100).toFixed(2);
-        const donationDate = new Date(donation.createdAt || Date.now()).toDateString();
 
         doc
             .fontSize(20)
@@ -43,7 +42,7 @@ const generateDonationReceiptBuffer = (donation, user, charity) => {
             .text(`Donation Amount: ₹${amountInRupees}`)
             .text(`Payment ID: ${donation.paymentId}`)
             .text(`Order ID: ${donation.orderId}`)
-            .text(`Date: ${donationDate}`)
+            .text(`Date: ${new Date(donation.createdAt).toDateString()}`)
             .moveDown();
 
         doc
