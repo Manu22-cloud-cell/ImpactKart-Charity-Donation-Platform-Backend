@@ -1,6 +1,7 @@
 const { Op, Sequelize} = require("sequelize");
 const charityRepo = require("../repositories/charityRepository");
 const AppError = require("../utils/AppError");
+const redis=require("../config/redis");
 
 
 // REGISTER CHARITY
@@ -88,6 +89,19 @@ exports.listCharities = async (query) => {
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 6;
 
+    // Unique cache key
+    const cacheKey = `charities:${page}:${limit}:${category || "all"}:${search || "none"}`;
+
+    // Check cache
+    const cachedData = await redis.get(cacheKey);
+
+    if (cachedData) {
+        console.log("Redis HIT");
+        return JSON.parse(cachedData);
+    }
+
+    console.log("Redis MISS");
+
     const where = {
         status: "APPROVED",
         collectedAmount: {
@@ -112,23 +126,43 @@ exports.listCharities = async (query) => {
         offset
     );
 
-    return {
+    const result = {
         total: count,
         page,
         totalPages: Math.ceil(count / limit),
         charities: rows
     };
+
+    // Store in Redis (TTL = 60 sec)
+    await redis.set(cacheKey, JSON.stringify(result), "EX", 60);
+
+    return result;
 };
 
 
 // GET SINGLE CHARITY
 exports.getCharity = async (id) => {
 
+    const cacheKey = `charity:${id}`;
+
+    // Check cache
+    const cached = await redis.get(cacheKey);
+
+    if (cached) {
+        console.log("Redis HIT (single)");
+        return JSON.parse(cached);
+    }
+
+    console.log("Redis MISS (single)");
+
     const charity = await charityRepo.findCharityById(id);
 
     if (!charity || charity.status !== "APPROVED") {
         throw new AppError("Charity not found", 404);
     }
+
+    // Store in Redis
+    await redis.set(cacheKey, JSON.stringify(charity), "EX", 60);
 
     return charity;
 };

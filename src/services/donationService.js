@@ -6,6 +6,7 @@ const donationRepo = require("../repositories/donationRepository");
 const AppError = require("../utils/AppError");
 
 const { sendDonationConfirmation } = require("./emailService");
+const redis = require("../config/redis");
 
 
 // CREATE ORDER
@@ -87,6 +88,22 @@ exports.verifyPayment = async (data, io) => {
         );
 
     });
+
+    // CACHE INVALIDATION
+    try {
+        // Remove single charity cache
+        await redis.del(`charity:${donation.charityId}`);
+
+        // Remove all charity list caches
+        const keys = await redis.keys("charities:*");
+        if (keys.length > 0) {
+            await redis.del(keys);
+        }
+
+        console.log("🧹 Redis cache cleared after donation");
+    } catch (cacheError) {
+        console.error("Redis cache clear error:", cacheError);
+    }
 
     //Socket.io
     if (io) {
