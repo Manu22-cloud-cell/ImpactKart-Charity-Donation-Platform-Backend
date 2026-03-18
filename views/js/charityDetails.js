@@ -71,7 +71,14 @@ async function loadImpactReports(charityId) {
         const container = document.getElementById("impactReportsContainer");
 
         if (!reports || reports.length === 0) {
-            container.innerHTML = "<p>No impact updates yet.</p>";
+            container.innerHTML = `
+    <div class="empty-impact">
+        <div class="empty-content">
+            <h3>No Updates Yet</h3>
+            <p>This charity hasn’t posted any impact reports.</p>
+        </div>
+    </div>
+`;
             return;
         }
 
@@ -81,9 +88,9 @@ async function loadImpactReports(charityId) {
                 <p>${report.description}</p>
 
                 <div class="impact-images">
-                    ${(report.images || []).map(img => 
-                        `<img src="${img}" alt="Impact image" />`
-                    ).join("")}
+                    ${(report.images || []).map(img =>
+            `<img src="${img}" alt="Impact image" />`
+        ).join("")}
                 </div>
 
                 <small class="impact-date">
