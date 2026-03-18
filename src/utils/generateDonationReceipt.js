@@ -2,6 +2,7 @@ const PDFDocument = require("pdfkit");
 
 const generateDonationReceiptBuffer = (donation, user, charity) => {
     return new Promise((resolve, reject) => {
+
         const doc = new PDFDocument({ margin: 50 });
 
         doc.info.Title = "Donation Receipt";
@@ -18,6 +19,7 @@ const generateDonationReceiptBuffer = (donation, user, charity) => {
         });
 
         const amountInRupees = (donation.amount / 100).toFixed(2);
+        const donationDate = new Date(donation.createdAt || Date.now()).toDateString();
 
         doc
             .fontSize(20)
@@ -41,7 +43,7 @@ const generateDonationReceiptBuffer = (donation, user, charity) => {
             .text(`Donation Amount: ₹${amountInRupees}`)
             .text(`Payment ID: ${donation.paymentId}`)
             .text(`Order ID: ${donation.orderId}`)
-            .text(`Date: ${donation.createdAt.toDateString()}`)
+            .text(`Date: ${donationDate}`)
             .moveDown();
 
         doc
