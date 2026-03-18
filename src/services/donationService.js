@@ -1,12 +1,10 @@
 const razorpay = require("../config/razorpay");
 const crypto = require("crypto");
 const sequelize = require("../config/database");
-
 const donationRepo = require("../repositories/donationRepository");
 const AppError = require("../utils/AppError");
-
-const { sendDonationConfirmation } = require("./emailService");
 const redis = require("../config/redis");
+const emailQueue = require("../queues/emailQueue");
 
 
 // CREATE ORDER
@@ -100,7 +98,7 @@ exports.verifyPayment = async (data, io) => {
             await redis.del(keys);
         }
 
-        console.log("🧹 Redis cache cleared after donation");
+        console.log("Redis cache cleared after donation");
     } catch (cacheError) {
         console.error("Redis cache clear error:", cacheError);
     }
@@ -120,11 +118,10 @@ exports.verifyPayment = async (data, io) => {
         });
     }
 
-    // Send email (non-blocking)
+    // Send email (using bullmq)
     try {
-
         if (donation.User) {
-            await sendDonationConfirmation({
+            await emailQueue.add("sendDonationEmail", {
                 to: donation.User.email,
                 name: donation.User.name,
                 amount: donation.amount / 100,
@@ -132,11 +129,16 @@ exports.verifyPayment = async (data, io) => {
                 donation,
                 user: donation.User,
                 charity: donation.Charity
+            }, {
+                attempts: 3,
+                backoff: {
+                    type: "exponential",
+                    delay: 5000
+                }
             });
         }
-
-    } catch (emailError) {
-        console.error("Email sending failed:", emailError);
+    } catch (err) {
+        console.error("Queue add failed:", err);
     }
 
 };
