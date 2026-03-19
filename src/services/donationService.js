@@ -126,9 +126,7 @@ exports.verifyPayment = async (data, io) => {
                 name: donation.User.name,
                 amount: donation.amount / 100,
                 charityName: donation.Charity.name,
-                donation,
-                user: donation.User,
-                charity: donation.Charity
+                donationId: donation.id,
             }, {
                 attempts: 3,
                 backoff: {

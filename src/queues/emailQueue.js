@@ -1,10 +1,8 @@
 const { Queue } = require("bullmq");
+const redis=require("../config/redis");
 
 const emailQueue = new Queue("emailQueue", {
-    connection: {
-        host: "127.0.0.1",
-        port: 6379
-    }
+    connection: redis
 });
 
 module.exports = emailQueue;
