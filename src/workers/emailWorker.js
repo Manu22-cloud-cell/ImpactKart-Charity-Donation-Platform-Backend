@@ -1,6 +1,7 @@
 const { Worker } = require("bullmq");
 const { sendDonationConfirmation } = require("../services/emailService");
 const redis = require("../config/redis");
+const donationRepo = require("../repositories/donationRepository");
 
 console.log("Email Worker started...");
 
@@ -11,11 +12,24 @@ const worker = new Worker(
 
         if (job.name === "sendDonationEmail") {
             try {
-                await sendDonationConfirmation(job.data);
+                // Fetch full donation with relations
+                const donation = await donationRepo.findDonationById(job.data.donationId);
+
+                if (!donation) {
+                    throw new Error("Donation not found");
+                }
+
+                await sendDonationConfirmation({
+                    ...job.data,
+                    donation,
+                    user: donation.User,
+                    charity: donation.Charity,
+                });
+
                 console.log("Email sent");
             } catch (err) {
                 console.error("Email failed:", err);
-                throw err;
+                throw err; // required for retry
             }
         }
     },
