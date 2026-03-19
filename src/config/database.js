@@ -1,13 +1,15 @@
-const { Sequelize } = require("sequelize");
+const {Sequelize} = require("sequelize");
 
-console.log("DB CONFIG LOADED");
-
-const sequelize = new Sequelize(
-    `mysql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:3306/${process.env.DB_NAME}`,
+const sequelize=new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
     {
-        dialect: "mysql",
-        logging: false,
+        host:process.env.DB_HOST,
+        dialect:process.env.DB_DIALECT,
+        dialect:process.env.DB_DIALECT || "mysql",
+        logging:false,
     }
 );
 
-module.exports = sequelize;
+module.exports=sequelize;

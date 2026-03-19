@@ -4,7 +4,7 @@ const sequelize = require("../config/database");
 const donationRepo = require("../repositories/donationRepository");
 const AppError = require("../utils/AppError");
 const redis = require("../config/redis");
-const emailQueue = require("../queues/emailQueue");
+const { sendDonationConfirmation } = require("./emailService");
 
 
 // CREATE ORDER
@@ -98,7 +98,6 @@ exports.verifyPayment = async (data, io) => {
             await redis.del(keys);
         }
 
-        console.log("Redis cache cleared after donation");
     } catch (cacheError) {
         console.error("Redis cache clear error:", cacheError);
     }
@@ -121,24 +120,19 @@ exports.verifyPayment = async (data, io) => {
     // Send email (using bullmq)
     try {
         if (donation.User) {
-            await emailQueue.add("sendDonationEmail", {
+            await sendDonationConfirmation({
                 to: donation.User.email,
                 name: donation.User.name,
                 amount: donation.amount / 100,
                 charityName: donation.Charity.name,
-                donationId: donation.id,
-            }, {
-                attempts: 3,
-                backoff: {
-                    type: "exponential",
-                    delay: 5000
-                }
+                donation,
+                user: donation.User,
+                charity: donation.Charity
             });
         }
-    } catch (err) {
-        console.error("Queue add failed:", err);
+    } catch (emailError) {
+        console.error("Email sending failed:", emailError);
     }
-
 };
 
 

@@ -42,7 +42,7 @@ const generateDonationReceiptBuffer = (donation, user, charity) => {
             .text(`Donation Amount: ₹${amountInRupees}`)
             .text(`Payment ID: ${donation.paymentId}`)
             .text(`Order ID: ${donation.orderId}`)
-            .text(`Date: ${new Date(donation.createdAt).toDateString()}`)
+            .text(`Date: ${donation.createdAt.toDateString()}`)
             .moveDown();
 
         doc
