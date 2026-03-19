@@ -11,4 +11,6 @@ const sequelize = new Sequelize(
     }
 );
 
+console.log("DB CONFIG LOADED - DIALECT:", "mysql");
+
 module.exports = sequelize;
