@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { Worker } = require("bullmq");
 const { sendDonationConfirmation } = require("../services/emailService");
 const redis = require("../config/redis");
