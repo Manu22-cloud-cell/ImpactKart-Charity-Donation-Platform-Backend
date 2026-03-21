@@ -1,3 +1,5 @@
+requireAuth();
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     await loadNavbar(); 
