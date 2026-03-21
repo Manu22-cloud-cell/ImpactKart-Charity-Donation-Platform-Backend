@@ -17,8 +17,7 @@ document.addEventListener("click", function (e) {
 
         // BLOCK UNAUTHENTICATED USERS
         if (!token) {
-            const redirectUrl = `/charity-details.html?id=${e.target.dataset.id}`;
-            window.location.href = `/login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+            window.location.href = "/login.html";
             return;
         }
 

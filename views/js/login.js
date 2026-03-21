@@ -1,15 +1,6 @@
 const form = document.getElementById("loginForm");
 const message = document.getElementById("message");
 
-const params = new URLSearchParams(window.location.search);
-const redirect = params.get("redirect");
-
-if (redirect) {
-    window.location.href = redirect;
-} else {
-    window.location.href = "/dashboard.html";
-}
-
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
