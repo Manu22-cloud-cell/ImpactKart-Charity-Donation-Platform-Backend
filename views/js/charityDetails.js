@@ -1,3 +1,5 @@
+requireAuth();
+
 const socket = io("http://40.192.99.62");
 
 socket.on("connect", () => {

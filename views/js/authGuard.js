@@ -3,6 +3,9 @@ function requireAuth() {
 
     if (!token) {
         window.location.href = "/login.html";
+    } else {
+        // Allow page render
+        document.body.style.display = "block";
     }
 }
 

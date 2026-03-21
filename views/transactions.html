@@ -1,38 +1,47 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>ImpactKart | My Transactions</title>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/transactions.css">
+
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<div id="navbarContainer"></div>
+    <!-- NAVBAR -->
+    <div id="navbarContainer"></div>
 
-<!-- SUCCESS MESSAGE -->
-<div id="successBanner" class="success-banner hidden">
-    🎉 Donation Successful! Your receipt is available below.
-</div>
-
-<!-- TRANSACTIONS -->
-<section class="transactions">
-    <h2>My Donations</h2>
-
-    <div id="transactionsList" class="transactions-list"></div>
-
-    <div id="noTransactions" class="no-transactions hidden">
-        You haven’t made any donations yet.
+    <!-- SUCCESS MESSAGE -->
+    <div id="successBanner" class="success-banner hidden">
+        🎉 Donation Successful! Your receipt is available below.
     </div>
-</section>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="/js/api.js"></script>
-<script src="/js/authGuard.js"></script>
-<script>
-    requireAuth();
-</script>
-<script src="/js/navbar.js"></script>
-<script src="/js/transactions.js" defer></script>
+    <!-- TRANSACTIONS -->
+    <section class="transactions">
+        <h2>My Donations</h2>
+
+        <div id="transactionsList" class="transactions-list"></div>
+
+        <div id="noTransactions" class="no-transactions hidden">
+            You haven’t made any donations yet.
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/authGuard.js"></script>
+    <script>
+        requireAuth();
+    </script>
+    <script src="/js/navbar.js"></script>
+    <script src="/js/transactions.js" defer></script>
 </body>
+
 </html>
