@@ -1,4 +1,5 @@
 // ================= DONATION COMPONENT =================
+requireAuth();
 
 const RAZORPAY_KEY = "rzp_test_SBCOdQy5WWyIor";
 
