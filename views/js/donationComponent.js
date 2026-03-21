@@ -1,5 +1,4 @@
 // ================= DONATION COMPONENT =================
-requireAuth();
 
 const RAZORPAY_KEY = "rzp_test_SBCOdQy5WWyIor";
 
@@ -13,6 +12,15 @@ document.addEventListener("click", function (e) {
     // Donate Button Click
     if (e.target.classList.contains("donate-btn")) {
         e.stopPropagation();
+
+        const token = localStorage.getItem("token");
+
+        // BLOCK UNAUTHENTICATED USERS
+        if (!token) {
+            const redirectUrl = `/charity-details.html?id=${e.target.dataset.id}`;
+            window.location.href = `/login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+            return;
+        }
 
         const charityId = e.target.dataset.id;
         const charityName = e.target.dataset.name;
@@ -135,7 +143,7 @@ async function verifyPayment(response, donationId) {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 donationId,
-                socketId:socket.id,
+                socketId: socket.id,
             }),
         });
 
