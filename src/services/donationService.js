@@ -70,6 +70,8 @@ exports.verifyPayment = async (data, io) => {
         throw new AppError("Donation already processed", 400);
     }
 
+    let updatedCharityAmount;
+
     await sequelize.transaction(async (t) => {
 
         if (donation.status === "SUCCESS") return;
@@ -85,6 +87,13 @@ exports.verifyPayment = async (data, io) => {
             t
         );
 
+        // FETCH UPDATED VALUE INSIDE TRANSACTION
+        const updatedCharity = await donationRepo.getCharityById(
+            donation.charityId,
+            t
+        );
+
+        updatedCharityAmount = updatedCharity.collectedAmount;
     });
 
     // CACHE INVALIDATION
@@ -113,7 +122,8 @@ exports.verifyPayment = async (data, io) => {
         emitter.emit("donationUpdate", {
             charityId: donation.charityId,
             amount: donation.amount / 100,
-            donorName: donation.User.name
+            totalAmount: updatedCharityAmount,
+            donorName: donation.User ?.name || "Someone"
         });
     }
 

@@ -39,8 +39,8 @@ async function loadCharity() {
 
             <div class="info">
                 <p><strong>Location:</strong> ${charity.location}</p>
-                <p><strong>Goal:</strong> ₹${charity.goalAmount}</p>
-                <p><strong>Raised:</strong> ₹${charity.collectedAmount}</p>
+                <p><strong>Goal:</strong> ₹<span id="goalAmount">${charity.goalAmount}</span></p>
+                <p><strong>Raised:</strong> ₹<span id="raisedAmount">${charity.collectedAmount}</span></p>
             </div>
 
             <div class="progress-bar">
@@ -106,35 +106,27 @@ async function loadImpactReports(charityId) {
     }
 }
 
+socket.on("connect", () => {
+    console.log("Socket connected:", socket.id);
+});
+
 socket.on("donationUpdate", (data) => {
 
-    const { charityId, amount, donorName } = data;
+    const { charityId, totalAmount, donorName } = data;
 
-    // SHOW MESSAGE
-    showToast(`${donorName} donated ₹${amount}`);
+    showToast(`${donorName} donated`);
 
-    // EXISTING UI UPDATE (keep this)
-    const card = document.querySelector(`[data-id="${charityId}"]`);
-    if (!card) return;
+    const goalEl = document.getElementById("goalAmount");
+    const raisedEl = document.getElementById("raisedAmount");
+    const progressEl = document.querySelector(".progress");
 
-    const amountEl = card.querySelector("[data-amount]");
-    const progressEl = card.querySelector("[data-progress]");
+    if (!goalEl || !raisedEl || !progressEl) return;
 
-    if (!amountEl || !progressEl) return;
+    const goal = parseInt(goalEl.innerText);
 
-    const text = amountEl.innerText;
-    const match = text.match(/₹(\d+)\sraised\s+of\s+₹(\d+)/);
+    const percent = Math.min((totalAmount / goal) * 100, 100);
 
-    if (!match) return;
-
-    let current = parseInt(match[1]);
-    const goal = parseInt(match[2]);
-
-    current += amount;
-
-    const percent = Math.min((current / goal) * 100, 100);
-
-    amountEl.innerText = `₹${current} raised of ₹${goal}`;
+    raisedEl.innerText = totalAmount;
     progressEl.style.width = `${percent}%`;
 });
 

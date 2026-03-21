@@ -224,15 +224,17 @@ window.addEventListener("click", function (e) {
     }
 });
 
+socket.on("connect", () => {
+    console.log("Socket connected:", socket.id);
+});
 
 socket.on("donationUpdate", (data) => {
 
-    const { charityId, amount, donorName } = data;
+    const { charityId, totalAmount, donorName } = data;
 
-    // SHOW MESSAGE
-    showToast(`${donorName} donated ₹${amount}`);
+    // Toast
+    showToast(`${donorName} donated`);
 
-    // EXISTING UI UPDATE (keep this)
     const card = document.querySelector(`[data-id="${charityId}"]`);
     if (!card) return;
 
@@ -241,19 +243,17 @@ socket.on("donationUpdate", (data) => {
 
     if (!amountEl || !progressEl) return;
 
+    // Extract goal
     const text = amountEl.innerText;
     const match = text.match(/₹(\d+)\sraised\s+of\s+₹(\d+)/);
-
     if (!match) return;
 
-    let current = parseInt(match[1]);
     const goal = parseInt(match[2]);
 
-    current += amount;
+    // USE BACKEND VALUE
+    const percent = Math.min((totalAmount / goal) * 100, 100);
 
-    const percent = Math.min((current / goal) * 100, 100);
-
-    amountEl.innerText = `₹${current} raised of ₹${goal}`;
+    amountEl.innerText = `₹${totalAmount} raised of ₹${goal}`;
     progressEl.style.width = `${percent}%`;
 });
 

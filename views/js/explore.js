@@ -89,25 +89,26 @@ function renderCampaigns(charities) {
         const card = document.createElement("div");
         card.className = "campaign-card";
 
+        card.setAttribute("data-id", charity.id);
+
         card.innerHTML = `
-            <h3>${charity.name}</h3>
-            <p>${charity.description.substring(0, 90)}...</p>
-            <p><strong>${charity.location || ""}</strong></p>
+    <h3>${charity.name}</h3>
+    <p>${charity.description.substring(0, 90)}...</p>
+    <p><strong>${charity.location || ""}</strong></p>
 
-            <div class="progress-bar">
-                <div class="progress" style="width:${percent}%"></div>
-            </div>
+    <div class="progress-bar">
+        <div class="progress" data-progress style="width:${percent}%"></div>
+    </div>
 
-            <p>₹${collected} raised of ₹${goal}</p>
+    <p data-amount>₹${collected} raised of ₹${goal}</p>
 
-            <button 
-             class="donate-btn"
-             data-id="${charity.id}"
-             data-name="${charity.name}">
-             Start Your Impact
-            </button>
-        `;
-
+    <button 
+     class="donate-btn"
+     data-id="${charity.id}"
+     data-name="${charity.name}">
+     Start Your Impact
+    </button>
+`;
         card.addEventListener("click", () => {
             window.location.href = `/charity-details.html?id=${charity.id}`;
         });
@@ -231,14 +232,16 @@ window.addEventListener("click", function (e) {
     }
 });
 
+socket.on("connect", () => {
+    console.log("Socket connected:", socket.id);
+});
+
 socket.on("donationUpdate", (data) => {
 
-    const { charityId, amount, donorName } = data;
+    const { charityId, totalAmount, donorName } = data;
 
-    // SHOW MESSAGE
-    showToast(`${donorName} donated ₹${amount}`);
+    showToast(`${donorName} donated`);
 
-    // EXISTING UI UPDATE (keep this)
     const card = document.querySelector(`[data-id="${charityId}"]`);
     if (!card) return;
 
@@ -249,17 +252,13 @@ socket.on("donationUpdate", (data) => {
 
     const text = amountEl.innerText;
     const match = text.match(/₹(\d+)\sraised\s+of\s+₹(\d+)/);
-
     if (!match) return;
 
-    let current = parseInt(match[1]);
     const goal = parseInt(match[2]);
 
-    current += amount;
+    const percent = Math.min((totalAmount / goal) * 100, 100);
 
-    const percent = Math.min((current / goal) * 100, 100);
-
-    amountEl.innerText = `₹${current} raised of ₹${goal}`;
+    amountEl.innerText = `₹${totalAmount} raised of ₹${goal}`;
     progressEl.style.width = `${percent}%`;
 });
 

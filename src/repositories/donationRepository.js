@@ -49,3 +49,7 @@ exports.incrementCharityAmount = (charityId, amount, transaction) => {
         }
     );
 };
+
+exports.getCharityById = (charityId, transaction = null) => {
+    return Charity.findByPk(charityId, { transaction });
+};
