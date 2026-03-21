@@ -112,9 +112,9 @@ socket.on("connect", () => {
 
 socket.on("donationUpdate", (data) => {
 
-    const { charityId, totalAmount, donorName } = data;
+    const { charityId, amount, totalAmount, donorName } = data;
 
-    showToast(`${donorName} donated`);
+    showToast(`${donorName} donated ₹${amount}`);
 
     const goalEl = document.getElementById("goalAmount");
     const raisedEl = document.getElementById("raisedAmount");

@@ -238,9 +238,9 @@ socket.on("connect", () => {
 
 socket.on("donationUpdate", (data) => {
 
-    const { charityId, totalAmount, donorName } = data;
+    const { charityId, amount, totalAmount, donorName } = data;
 
-    showToast(`${donorName} donated`);
+    showToast(`${donorName} donated ₹${amount}`);
 
     const card = document.querySelector(`[data-id="${charityId}"]`);
     if (!card) return;
