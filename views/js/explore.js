@@ -1,4 +1,4 @@
-const socket = io("http://40.192.99.62");
+const socket = io("http://16.112.189.41");
 
 // ================= GLOBAL STATE =================
 let currentPage = 1;

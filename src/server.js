@@ -43,7 +43,6 @@ io.on("connection", (socket) => {
 
         console.log("Models synced");
 
-        // IMPORTANT: use server.listen instead of app.listen
         server.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
