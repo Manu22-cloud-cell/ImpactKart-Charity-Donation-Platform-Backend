@@ -1,6 +1,6 @@
 requireAuth();
 
-const socket = io("http://16.112.189.41");
+const socket = io("http://40.192.2.46");
 
 socket.on("connect", () => {
     console.log("Connected:", socket.id);
